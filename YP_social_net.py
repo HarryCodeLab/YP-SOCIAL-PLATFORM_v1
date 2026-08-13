@@ -11,8 +11,9 @@ In the future this project would be progressively updated.
 Everything with CHRIST, Keep close to CHRIST.'''
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash, render_template_string
-from flask_pymongo import PyMongo
 from pymongo.server_api import ServerApi
+import pymongo
+from pymongo import MongoClient
 from flask_login import LoginManager, UserMixin, login_user, current_user, logout_user,login_required
 from flask_socketio import SocketIO,emit
 from werkzeug.security import generate_password_hash,check_password_hash
@@ -36,27 +37,24 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("APP_SECRET_KEY")
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-# Database Configuration
+MONGO_URI = os.getenv("MONGODB_URI")
 
-app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
-mongo = PyMongo(app)
-# ... other imports ...
+client = pymongo.MongoClient(MONGO_URI, server_api=ServerApi('1'))
+db = client['yp_social_db']
 
-# NUCLEAR DEBUG - add this right after app = Flask(__name__)
-print("ALL ENV VARS:", {k:v for k,v in os.environ.items() if 'MONGO' in k.upper()})
+user_collection = db["users"]
+post_collection = db["posts"]
+comment_collection = db["comments"]
+prayer_request_collection = db["prayer_requests"]
+likes= db["likes"]
+prayed_for = db["prayed_for"]
+completed_goals = db["completed_goals"]
+video_collection = db["videos"]
 
-user_collection = mongo.db.users
-post_collection = mongo.db.posts
-comment_collection = mongo.db.comments
-prayer_request_collection = mongo.db.prayer_requests
-likes_collection = mongo.db.likes
-prayed_for_collection = mongo.db.answered_request
-completed_goals_collection = mongo.db.completed_goals
-
-mongo.db.posts.create_index("created_at", expireAfterSeconds=259201)
-mongo.db.comments.create_index("created_at", expireAfterSeconds=259201)
-mongo.db.prayer_requests.create_index("created_at", expireAfterSeconds=259201)
-mongo.db.completed_goals.create_index("created_at", expireAfterSeconds=648000)
+post_collection.create_index("created_at", expireAfterSeconds=259201)
+comment_collection.create_index("created_at", expireAfterSeconds=259201)
+prayer_request_collection.create_index("created_at", expireAfterSeconds=259201)
+completed_goals.create_index("created_at", expireAfterSeconds=648000)
 
 admin_password=os.environ.get("ADMIN_PASSWORD")
 
@@ -115,13 +113,13 @@ def home():
      ' "Dear friends, never take revenge. Leave that to the righteous anger of God. For the Scriptures say, “I will take revenge; I will pay them back,” says the Lord." ROMANS 12:19  '
     )
     random_verse = random.choice(verses)
-    #db_search = list(mongo.db.users.find({"username":{"$regex":request.form["search"]}}))
+    #db_search = list(user_collection.find({"username":{"$regex":request.form["search"]}}))
     return render_template("home.html",verse=random_verse)#,db_search=db_search)        
     
 @app.route('/search')
 @login_required
 def search():
-    db_search = list(mongo.db.users.find({"username":{"$regex":request.form["search"]}}))
+    db_search = list(user_collection.find({"username":{"$regex":request.form["search"]}}))
     return render_template("home.html",verse=random_verse,db_search=db_search)          
     
     
@@ -224,7 +222,7 @@ def edit_profile():
 @login_required
 def view_profile():
     if current_user.is_authenticated:  
-        user_count = mongo.db.users.count_documents({})
+        user_count = user_collection.count_documents({})
         return render_template("profile.html",user_count=user_count)
     return redirect(url_for('login'))
           
@@ -235,23 +233,23 @@ def write_message():
         return redirect(url_for("login"))        
 
     posts = list(post_collection.find().sort("_id", -1))
-    post_count = mongo.db.posts.count_documents({})
+    post_count = post_collection.count_documents({})
     
     for post in posts:
         post["comments"] = list(
             comment_collection.find({"post_id": post["_id"]}).sort("_id", 1)
         )
-        post["comment_count"] = mongo.db.comments.count_documents({"post_id": post["_id"]})
+        post["comment_count"] = comment_collection.count_documents({"post_id": post["_id"]})
         
         like_filter = {
         "user_id": ObjectId(current_user.id),
         "post_id": post["_id"]
     }
     
-        post["already_liked"]= mongo.db.likes.find_one(like_filter) 
-        post["like_count"] = mongo.db.likes.count_documents({"post_id": post["_id"]})
+        post["already_liked"]= likes.find_one(like_filter) 
+        post["like_count"] = likes.count_documents({"post_id": post["_id"]})
         post["same_author"] = ObjectId(current_user.id) == ObjectId(post["Author_id"])
-        post["is_admin"] = mongo.db.users.find_one({"_id":post["Author_id"]})
+        post["is_admin"] = user_collection.find_one({"_id":post["Author_id"]})
         
     return render_template("chat.html", posts=posts ,post_count=post_count)
 
@@ -283,9 +281,9 @@ def handle_message_event(data):
 def view_auth_profile(auth_id):
     if not current_user.is_authenticated:
         return redirect(url_for("login"))
-    authors = list(mongo.db.users.find({"_id":ObjectId(auth_id)}))
+    authors = list(user_collection.find({"_id":ObjectId(auth_id)}))
     for author in authors:
-        mongo.db.users.find({"_id":auth_id})
+        user_collection.find({"_id":auth_id})
         
     return render_template("author_profile.html",authors=authors)
               
@@ -299,7 +297,7 @@ def comment(post_id):
     if request.method == "POST":
         comment_text = request.form["comment"].strip()
 
-        mongo.db.comments.insert_one({
+        comment_collection.insert_one({
             "post_id": ObjectId(post_id),
             "author": current_user.username,
             "author_id": ObjectId(current_user.id),
@@ -375,7 +373,7 @@ def view_goals():
         day = now.strftime("%A")
         time = int(now.strftime("%H"))
 
-        progress = mongo.db.completed_goals.find_one({
+        progress = completed_goals.find_one({
         "user_id": ObjectId(current_user.id),
         "day":  day
         })
@@ -398,13 +396,13 @@ def write_prayer_request():
             #"_id" : ObjectId(Posts.id)
         })
     prayer_requests = list(prayer_request_collection.find().sort("_id", -1))
-    count  = mongo.db.prayer_requests.count_documents({})
+    count  = prayer_request_collection.count_documents({})
     for pr_rq in prayer_requests:
         pr_rq["prayed_for"] = mongo.db.answered_request.count_documents({
             "request_id": pr_rq["_id"]
         })
         pr_rq["same_author"] = ObjectId(current_user.id) == ObjectId(pr_rq["Author_id"])
-        pr_rq["is_admin"] = mongo.db.users.find_one({"_id":pr_rq["Author_id"]})
+        pr_rq["is_admin"] = user_collection.find_one({"_id":pr_rq["Author_id"]})
 
     return render_template("prayer_request.html", prayer_requests=prayer_requests,count=count)
     
@@ -463,7 +461,7 @@ def submit_completed_goals():
         return redirect(url_for("login"))
         
     if request.method == "POST":
-        mongo.db.completed_goals.insert_one({
+        completed_goals.insert_one({
             "user_id": ObjectId(current_user.id),
             "completed_goals": int(request.form["goals_completed"]),
             "day": str(datetime.datetime.now().strftime("%A")),
@@ -519,12 +517,12 @@ def like_post(post_id):
         "post_id": ObjectId(post_id)
     }
     
-        existing_like = mongo.db.likes.find_one(like_filter)
+        existing_like = likes.find_one(like_filter)
     
         if not existing_like:
-            mongo.db.likes.insert_one(like_filter)
+            likes.insert_one(like_filter)
         else:
-            mongo.db.likes.delete_one(like_filter)
+            likes.delete_one(like_filter)
         
         return redirect(url_for("write_message"))
         
@@ -536,14 +534,14 @@ def delete_post(post_id,author_id):
     if request.method == "GET":
         
         if current_user.role == "Admin":
-            mongo.db.posts.delete_many({"_id":ObjectId(post_id)})
-            mongo.db.comments.delete_many({"post_id":ObjectId(post_id)})
-            mongo.db.likes.delete_many({"post_id":ObjectId(post_id)})
+            post_collection.delete_many({"_id":ObjectId(post_id)})
+            comment_collection.delete_many({"post_id":ObjectId(post_id)})
+            likes.delete_many({"post_id":ObjectId(post_id)})
             
         elif ObjectId(current_user.id) == ObjectId(author_id):
-            mongo.db.posts.delete_many({"_id":ObjectId(post_id)})
-            mongo.db.comments.delete_many({"post_id":ObjectId(post_id)})
-            mongo.db.likes.delete_many({"post_id":ObjectId(post_id)})
+            post_collection.delete_many({"_id":ObjectId(post_id)})
+            comment_collection.delete_many({"post_id":ObjectId(post_id)})
+            likes.delete_many({"post_id":ObjectId(post_id)})
             
         else:
             return redirect(url_for("write_message"))
@@ -578,7 +576,7 @@ def delete_request(request_id,author_id):
     if request.method == "GET":
         
         if ObjectId(current_user.id) == ObjectId(author_id):
-            mongo.db.prayer_requests.delete_many({"_id":ObjectId(request_id)})
+            prayer_request_collection.delete_many({"_id":ObjectId(request_id)})
             mongo.db.answered_request.delete_many({"request_id":ObjectId(request_id)})
             
         else:
@@ -630,7 +628,7 @@ def upload_video():
         
     video_url = f"https://archive.org/download/{identifier}/{filename}"
         
-    mongo.db.videos.insert_one({
+    video_collection.insert_one({
         "video_url":video_url,
         "author_id":ObjectId(current_user.id),
         "author":current_user.username,
@@ -647,8 +645,8 @@ def view_videos():
    if not current_user.is_authenticated:
         return redirect(url_for("login"))
         
-   videos = list(mongo.db.videos.find().sort("_id", -1)) 
-   video_count=mongo.db.videos.count_documents({})
+   videos = list(video_collection.find().sort("_id", -1)) 
+   video_count=video_collection.count_documents({})
    for video in videos:
        like_filter = {
         "user_id": ObjectId(current_user.id),
@@ -657,10 +655,10 @@ def view_videos():
        video["comments"] = list(
             comment_collection.find({"video_id": video["_id"]}).sort("_id", 1)
         )
-       video["comment_count"] = mongo.db.comments.count_documents({"video_id": video["_id"]})
-       video["like_count"] = mongo.db.likes.count_documents({"video_id": video["_id"]})
+       video["comment_count"] = comment_collection.count_documents({"video_id": video["_id"]})
+       video["like_count"] = likes.count_documents({"video_id": video["_id"]})
        video["same_author"] = ObjectId(current_user.id) == ObjectId(video["author_id"])
-       video["already_liked"]= mongo.db.likes.find_one(like_filter) 
+       video["already_liked"]= likes.find_one(like_filter) 
            
    return render_template("view_videos.html",videos=videos,video_count=video_count)
     
@@ -674,12 +672,12 @@ def like_video(video_id):
         "user_id": ObjectId(current_user.id),
         "video_id": ObjectId(video_id)
     }
-        existing_like = mongo.db.likes.find_one(like_filter)
+        existing_like = likes.find_one(like_filter)
     
         if not existing_like:
-            mongo.db.likes.insert_one(like_filter)
+            likes.insert_one(like_filter)
         else:
-            mongo.db.likes.delete_one(like_filter)
+            likes.delete_one(like_filter)
         
         return redirect(url_for("view_videos"))   
                
@@ -689,7 +687,7 @@ def view_dashboard():
     if not current_user.is_authenticated:
         return redirect(url_for("login"))    
     
-    goal_data = list(mongo.db.completed_goals.find(
+    goal_data = list(completed_goals.find(
     {"user_id":ObjectId(current_user.id)
     })
     )
@@ -706,7 +704,7 @@ def comment_vid(video_id):
     if request.method == "POST":
         comment_text = request.form["comment"].strip()
 
-        mongo.db.comments.insert_one({
+        comment_collection.insert_one({
             "video_id": ObjectId(video_id),
             "author": current_user.username,
             "author_id": ObjectId(current_user.id),
@@ -723,9 +721,9 @@ def delete_video(video_id,author_id):
     if request.method == "GET":
                     
         if ObjectId(current_user.id) == ObjectId(author_id):
-            mongo.db.posts.delete_many({"_id":ObjectId(video_id)})
-            mongo.db.comments.delete_many({"post_id":ObjectId(video_id)})
-            mongo.db.likes.delete_many({"video_id":ObjectId(video_id)})
+            post_collection.delete_many({"_id":ObjectId(video_id)})
+            comment_collection.delete_many({"post_id":ObjectId(video_id)})
+            likes.delete_many({"video_id":ObjectId(video_id)})
             
         else:
             return redirect(url_for("view_videos"))
@@ -736,8 +734,8 @@ def delete_video(video_id,author_id):
 @login_required
 def sign_out():
     if request.method == "GET":
-        mongo.db.users.delete_one({"_id":ObjectId(current_user.id)})
-        mongo.db.completed_goals.delete({"user_id":ObjectId(current_user.id)})
+        user_collection.delete_one({"_id":ObjectId(current_user.id)})
+        completed_goals.delete({"user_id":ObjectId(current_user.id)})
         logout_user()
         
     return redirect(url_for("login"))
