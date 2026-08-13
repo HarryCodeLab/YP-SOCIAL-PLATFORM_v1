@@ -40,10 +40,10 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 mongo = PyMongo(app)
-print("=" * 50)
-print("MONGO_URI from env:", os.environ.get("MONGO_URI"))
-print("MONGO_URI in config:", app.config.get("MONGO_URI"))
-print("=" * 50)
+# ... other imports ...
+
+# NUCLEAR DEBUG - add this right after app = Flask(__name__)
+print("ALL ENV VARS:", {k:v for k,v in os.environ.items() if 'MONGO' in k.upper()})
 
 user_collection = mongo.db.users
 post_collection = mongo.db.posts
