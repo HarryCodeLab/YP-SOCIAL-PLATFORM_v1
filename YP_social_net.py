@@ -10,6 +10,8 @@ Special Thanks to all my friends who helped me make this Project successful.
 In the future this project would be progressively updated.
 Everything with CHRIST, Keep close to CHRIST.'''
 
+import eventlet
+eventlet.monkey_patch()
 from flask import Flask, render_template, request, redirect, url_for, session, flash, render_template_string
 from pymongo.server_api import ServerApi
 import pymongo
