@@ -31,6 +31,10 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 env_path = os.path.join(BASE_DIR, ".env")
 if os.path.exists(env_path):
     load_dotenv(env_path)
+print("=" * 50)
+print("MONGO_URI from env:", os.environ.get("MONGO_URI"))
+print("MONGO_URI in config:", app.config.get("MONGO_URI"))
+print("=" * 50)
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("APP_SECRET_KEY")
