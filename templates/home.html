@@ -1,0 +1,59 @@
+<body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YP Social Platform - Home</title>
+<!--NAVIGATION CODE STARTS HERE -->
+<style>
+ul {list-style-type: none; margin: 0; padding: 0; background-color: #333;top: 0;width: 100%;position: fixed;overflow-x: auto;white-space: nowrap;-webkit-overflow-scrolling: touch; }
+ul::-webkit-scrollbar {display: none;}
+ul {scrollbar-width: none;}
+li {display: inline-block;border-right: 1px solid #bbb;}
+li:last-child {border-right: none;}
+li a {display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;font-size: 20px;}
+li a:hover:not(.active) {background-color: blue;}
+.active {
+  background: #11998e;}
+body {margin:0; background-color:#f1f7f9;}
+</style>
+body {margin:0;}
+<!-- Had to spend weekends and nights learning html and css. -->
+<ul>
+    <li><a class="active" href="/">Home🏘</a></li>
+    <li><a href="/View_your_profile">Profile👤</a></li>
+    <li><a href="/chats">Chat🖐</a></li>
+    <li><a href="/goals">Goals🏃</a></li>
+    <li><a href="/prayer_request">Prayer_requests🙏</a></li>
+    <li><a href="/bible_challenge">Bible_challenges📖</a></li>
+    <li><a href= "/about_yp">About YP🌟</a></li>
+    <li><a href="/progress_dashboard">Progress Dashboard📉</a></li>
+    <li><a href= "/view_videos">Daily Lessons📚</a></li>
+    <li><a href= "/help">Help ❓</a></li> 
+</ul>
+<!--NAVIGATION CODE ENDS HERE -->
+
+<h1><hr></h1>
+<img src="{{ url_for('static', filename='yp_social_platform_logo.png')}}" alt="YP SOCIAL PLATFORM LOGO" style="float:center;width:90px;height:90px;">
+<h2>Welcome back, {{current_user.username}}! </h2>
+<h3>Remember Goal #1:</h3>
+<h2>Pray for 5 brothers or sisters today.</h2>
+and don't forget to walk with God, always
+<h5>{{"_"*35}}</h5>
+<h4>Today's verse:</h4>
+{{verse}}<br>
+<h1></h1>
+
+<h1></h1><br>
+
+
+<h3>Do you have a problem or feedback you want to report? <br>
+Contact us by clicking on this <a href="mailto:lokimaharry8@gmail.com; harrycodelab@gmail.com"> >>CLICK HERE FOR FEEDBACK<< </a></h3>
+<h2><a onclick="toggle_message()" style="color:blue;">About this application</a></h2>
+<p id = "Message" > </p>
+<script>
+function toggle_message(){
+    document.getElementById("Message").innerHTML=
+    "<hr><br><strong>__Author__</strong> = Harry Code Lab [harrycodelab@gmail.com]<br> <br><strong>__Copyright__</strong> = Copyright © [2026] [Harry Code Lab]. All rights reserved <br><br><strong>__License__</strong> = The MIT License <br><br><strong>__Purpose of Building this app__</strong> = <br>A social media platform built for YP members from all over the PCC to meet, learn more about God, share their faith with each other, study the Bible with each other, pray for each other and learn from YP/Sunday School teachers from videos, rather than scrolling endlessly on Internet sites (turning doom scrolling into Faith-Scrolling ).<br>Special Thanks to all my friends who helped make this Project successful.<br>In the future this project would be progressively updated.<br>Everything with CHRIST, Keep close to CHRIST."
+}
+</script>
+</body>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YP Social Platform - Upload Video Lesson</title>
+<!--NAVIGATION CODE STARTS HERE -->
+<style>
+ul {list-style-type: none; margin: 0; padding: 0; background-color: #333;top: 0;width: 100%;position: fixed;overflow-x: auto;white-space: nowrap;-webkit-overflow-scrolling: touch; }
+ul::-webkit-scrollbar {display: none;}
+ul {scrollbar-width: none;}
+li {display: inline-block;border-right: 1px solid #bbb;}
+li:last-child {border-right: none;}
+li a {display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;font-size: 20px;}
+li a:hover:not(.active) {background-color: blue;}
+.active {
+  background: #11998e;}
+body {margin:0; background-color:#f1f7f9;}
+</style>
+body {margin:0;}
+<!-- Had to spend weekends and nights learning html and css. -->
+<ul>
+    <li><a href="/">Home🏘</a></li>
+    <li><a class="active" href="/View_your_profile">Profile👤</a></li>
+    <li><a href="/chats">Chat🖐</a></li>
+    <li><a href="/goals">Goals🏃</a></li>
+    <li><a href="/prayer_request">Prayer_requests🙏</a></li>
+    <li><a href="/bible_challenge">Bible_challenges📖</a></li>
+    <li><a href= "/about_yp">About YP🌟</a></li>
+    <li><a href="/progress_dashboard">Progress Dashboard📉</a></li>
+    <li><a href= "/view_videos">Daily Lessons📚</a></li>
+    <li><a href= "/help">Help ❓</a></li> 
+</ul>
+<!--NAVIGATION CODE ENDS HERE -->
+
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #fafafa; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        input, button { display: block; width: 100%; margin: 10px 0; padding: 10px; box-sizing: border-box; }
+        button { background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Upload a Video for the YPs</h2>
+        <!-- Form points to our Flask backend route -->
+        <form action="/upload-to-archive" method="POST" enctype="multipart/form-data">
+            <input type="file" name="video" id="videoInput" accept="video/*">
+
+            <video id="player" width="350" controls muted></video>
+            <h3>TITLE</h3>
+            <input type="text" name="title" placeholder="e.g The Baby Jesus is Born" required>
+            <h3>CAPTION</h3>
+            <textarea name="caption" placeholder="Write a caption of the video" required></textarea>
+            <button type="submit">Upload Video</button>
+        </form>
+        <script>
+const input = document.getElementById("videoInput");
+const player = document.getElementById("player");
+
+input.addEventListener("change", function () {
+
+    const file = this.files[0];
+
+    if (file) {
+
+        player.src = URL.createObjectURL(file);
+
+        player.load();
+
+        player.play();
+
+    }
+
+});
+</script>
+    </div>
+</body>
+</html>

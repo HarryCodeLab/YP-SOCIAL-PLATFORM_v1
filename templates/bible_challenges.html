@@ -1,0 +1,57 @@
+<body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YP Social Platform - Bible Challenges</title>
+<!--NAVIGATION CODE STARTS HERE -->
+<style>
+ul {list-style-type: none; margin: 0; padding: 0; background-color: #333;top: 0;width: 100%;position: fixed;overflow-x: auto;white-space: nowrap;-webkit-overflow-scrolling: touch; }
+ul::-webkit-scrollbar {display: none;}
+ul {scrollbar-width: none;}
+li {display: inline-block;border-right: 1px solid #bbb;}
+li:last-child {border-right: none;}
+li a {display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;font-size: 20px;}
+li a:hover:not(.active) {background-color: blue;}
+.active {
+  background: #11998e;}
+body {margin:0; background-color:#f1f7fa;}
+</style>
+body {margin:0;}
+<!-- Had to spend weekends and nights learning html and css. -->
+<ul>
+    <li><a href="/">Home🏘</a></li>
+    <li><a href="/View_your_profile">Profile👤</a></li>
+    <li><a href="/chats">Chat🖐</a></li>
+    <li><a href="/goals">Goals🏃</a></li>
+    <li><a href="/prayer_request">Prayer_requests🙏</a></li>
+    <li><a class="active" href="/bible_challenge">Bible_challenges📖</a></li>
+    <li><a href= "/about_yp">About YP🌟</a></li>
+    <li><a href="/progress_dashboard">Progress Dashboard📉</a></li>
+    <li><a href= "/view_videos">Daily Lessons📚</a></li>
+    <li><a href= "/help">Help ❓</a></li> 
+</ul>
+<!--NAVIGATION CODE ENDS HERE -->
+
+<h1>Today's Bible Challenges</h1>
+<h1></h1>
+<h2>{{"__"*20}}</h2>
+
+{% for challenge in challenges %}
+    <div style="border:1px solid #ccc;padding:10px;margin:10px 0;border-radius:8px;">
+    {{ challenge }}
+    </div>
+    
+{% endfor %}
+
+<h5>Facing issues completing a Bible challenge?</h5>
+<h5>How about a quick tour to the chat section to ask for help from other YPs🤔</h5>
+
+<p id="demo"></p>
+
+<!-- Users complain the the text on their screens is too small, barely visible. How can I fix this?
+And by d way does Erling Haaland actually eat raw cow hearts and raw unprocessed milk for his strength?
+<script>
+document.getElementById("demo").innerHTML = 
+"Screen width is " + screen.width;
+</script> -->
+</body>

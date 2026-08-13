@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YP Social Platform - Login</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .login-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); width: 340px; text-align: center; border-top: 5px solid #1a5f7a; }
+        h2 { color: #1a5f7a; margin-bottom: 5px; }
+        .tagline { font-size: 13px; color: #777; margin-bottom: 25px; font-style: italic; }
+        .input-group { margin-bottom: 18px; text-align: left; }
+        label { display: block; font-size: 12px; font-weight: bold; color: #555; margin-bottom: 5px; text-transform: uppercase; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        textarea {width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 11px; margin-bottom: 18px; text-align: left;}
+        input:focus { border-color: #1a5f7a; outline: none; }
+        .btn-login { width: 100%; padding: 12px; background: #1a5f7a; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-login:hover { background: #124559; }
+        .btn-profile  { width: 100%; padding: 12px; background: green; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-profile:hover { background: #124559; }
+        .flash-msg { color: #d9534f; background: #fdf7f7; border: 1px solid #f5dede; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+<img src="{{ url_for('static', filename='yp_social_platform_logo.png')}}" alt="Our Logo" style="width:90px;height:90px;">
+    <h2>YP Social Platform</h2>
+    <div class="tagline">"Let us not give up the habit of meeting together, as some are doing. Instead, let us encourage one another all the more, since you see that the Day of the Lord is coming near" - Hebrews 10:25</div>
+
+    <!-- Error Handling Engine 
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash-msg">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %} -->
+
+    <form action="/login" method="POST">
+        <div class="input-group">
+            <label>YP Username </label>
+            <input type="text" name="username" placeholder="e.g., Harry" required>
+        </div>
+        
+        <div class="input-group">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="e.g., harry@example.com" required>
+        </div>
+        
+        <div class="input-group">
+            <label>Secret Password</label>
+            <input type="password" name="password" placeholder="••••••••" max= "5" required>
+        </div>
+        
+        <div class="input-group">
+            <label>YOUR CONGREGATION</label>
+            <input type="text" name="congregation" placeholder="e.g., PC MUEA" required>
+        </div>
+        
+        <div class="input-group">
+            <label>Your Phone number</label>
+            <input min="1" type="number" name="number" placeholder=" +237" required>
+        </div>
+        
+        <div class="textarea">
+            <label>ABOUT YOU</label>
+            <textarea type="text" name="about_me" placeholder="e.g., My name is Harry, and I love YP" required></textarea>
+        </div>
+        <!--form action ="/admin_login" method ="GET">
+        <button type="submit" class="btn-profile">LOGIN AS ADMIN</button>
+        </form-->
+        <button type="submit" class="btn-login">SIGN IN</button>
+    </form>              
+             
+        
+</div>
+
+</body>
+</html>

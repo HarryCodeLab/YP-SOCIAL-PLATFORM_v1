@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YP Social Platform -Today's Goals</title>
+<!--NAVIGATION CODE STARTS HERE -->
+<style>
+ul {list-style-type: none; margin: 0; padding: 0; background-color: #333;top: 0;width: 100%;position: fixed;overflow-x: auto;white-space: nowrap;-webkit-overflow-scrolling: touch; }
+ul::-webkit-scrollbar {display: none;}
+ul {scrollbar-width: none;}
+li {display: inline-block;border-right: 1px solid #bbb;}
+li:last-child {border-right: none;}
+li a {display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;font-size: 20px;}
+li a:hover:not(.active) {background-color: blue;}
+.active {
+  background: #11998e;}
+body {margin:0; background-color:#f1f7f9;}
+</style>
+body {margin:0;}
+<!-- Had to spend weekends and nights learning html and css. -->
+<ul>
+    <li><a href="/">Home🏘</a></li>
+    <li><a href="/View_your_profile">Profile👤</a></li>
+    <li><a href="/chats">Chat🖐</a></li>
+    <li><a class="active" href="/goals">Goals🏃</a></li>
+    <li><a href="/prayer_request">Prayer_requests🙏</a></li>
+    <li><a href="/bible_challenge">Bible_challenges📖</a></li>
+    <li><a href= "/about_yp">About YP🌟</a></li>
+    <li><a href="/progress_dashboard">Progress Dashboard📉</a></li>
+    <li><a href= "/view_videos">Daily Lessons📚</a></li>
+    <li><a href= "/help">Help ❓</a></li> 
+</ul>
+<!--NAVIGATION CODE ENDS HERE -->
+
+
+<!-- Added a spacer div so your navigation bar doesn't block the Bible verse -->
+<div style="margin-top: 80px; padding: 15px;">
+
+    <h5>"So I run straight towards the goal in order to win the prize, which is God's call through Christ Jesus to the life above." PHILLIPIANS 3:14</h5>
+    <h1>Today's Goals</h1>
+    
+    <hr style="border: 1px solid #ccc; margin: 20px 0;">
+
+    {% set weekday_map = {'Monday': Monday, 'Tuesday': Tuesday, 'Wednesday': Wednesday, 'Thursday': Thursday, 'Friday': Friday, 'Saturday': Saturday, 'Sunday': Sunday} %}
+    
+    {% for goal in weekday_map[day] %}
+        <div style="border:1px solid #ccc; padding:10px; margin:10px 0; border-radius:8px; background-color: #f9f9f9;">
+            {{ goal }}
+        </div>
+    {% endfor %}
+    
+    {% if time >= 18 %}
+        {% if not progress %}
+            <hr style="border: 1px solid #ccc; margin: 20px 0;">
+            <h4>How many goals did you complete today? </h4>
+            
+            <form action="/submit_goals" method="POST">
+                <select name="goals_completed" style="padding: 8px; font-size: 16px;">
+                    <option value="None">0</option>
+                    <option value="1">1 goal</option>
+                    <option value="2">2 goals</option>
+                    <option value="3">3 goals</option>
+                    <option value="4">4 goals</option>
+                    <option value="5">5 goals</option>
+                </select>
+                <button type="submit" style="padding: 8px 15px; font-size: 16px; background-color: #11998e; color: white; border: none; border-radius: 4px; cursor: pointer;">SUBMIT DATA</button>
+            </form>
+        {% else %}
+            <div style="margin-top: 20px; padding: 15px; background-color: #e2f0d9; border-left: 5px solid #385723; color: #385723; font-weight: bold;">
+                ✓ Goals submitted! This form will unlock again tomorrow at 18:00
+            </div>
+        {% endif %}
+    {% endif %}
+
+</div>
+
+</body>
+</html>

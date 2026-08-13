@@ -1,0 +1,114 @@
+<body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YP Social Platform - Prayer Requests</title>
+<!--NAVIGATION CODE STARTS HERE -->
+<style>
+ul {list-style-type: none; margin: 0; padding: 0; background-color: #333;top: 0;width: 100%;position: fixed;overflow-x: auto;white-space: nowrap;-webkit-overflow-scrolling: touch; }
+ul::-webkit-scrollbar {display: none;}
+ul {scrollbar-width: none;}
+li {display: inline-block;border-right: 1px solid #bbb;}
+li:last-child {border-right: none;}
+li a {display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;font-size: 20px;}
+li a:hover:not(.active) {background-color: blue;}
+.active {
+  background: #11998e;}
+body {margin:0; background-color:#e9f7fb;}
+</style>
+body {margin:0;}
+<!-- Had to spend weekends and nights learning html and css. -->
+<ul>
+    <li><a href="/">Home🏘</a></li>
+    <li><a href="/View_your_profile">Profile👤</a></li>
+    <li><a href="/chats">Chat🖐</a></li>
+    <li><a href="/goals">Goals🏃</a></li>
+    <li><a class="active" href="/prayer_request">Prayer_requests🙏</a></li>
+    <li><a href="/bible_challenge">Bible_challenges📖</a></li>
+    <li><a href= "/about_yp">About YP🌟</a></li>
+    <li><a href="/progress_dashboard">Progress Dashboard📉</a></li>
+    <li><a href= "/view_videos">Daily Lessons📚</a></li>
+    <li><a href= "/help">Help ❓</a></li> 
+</ul>
+<!--NAVIGATION CODE ENDS HERE -->
+
+<style>        
+        .input-group { margin-bottom: 18px; text-align: left; }
+        label { display: block; font-size: 24px; font-weight: bold; color: #555; margin-bottom: 5px; text-transform: uppercase; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        input:focus { border-color: #1a5f7a; outline: none; }        
+        .btn-profile  { width: 100%; padding: 12px; background: orange; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-profile:hover { background: #124559; }       
+    </style>
+<h2></h2>    
+<h5>"He helps us in all our troubles, so that we are able to help others with all kinds of troubles, using the same help that we ourselves have received from God". 2 CORINTHIANS 1:4</h5>
+<h1>{{'__'*20}}</h1>    
+<form action="/prayer_request" method="POST">
+    <div class="input-group">
+        <h1><label>Write a prayer request</label></h1>
+        <input type="text" name="prayer_request" placeholder="e.g., Please pray for my exams tomorrow" required>
+        <h1>{{Author}}</h1>
+        
+    <button type="submit" class="btn-profile">SUBMIT REQUEST</button>
+    </div>
+</form>
+
+<hr>
+
+<h2>Prayer Requests</h2>
+<small>{{count}} prayer requests</small>
+{% for prayer_request in prayer_requests %}
+<div style="border:1px solid #ccc;padding:10px;margin:10px 0;border-radius:8px;">
+<nav>
+    <a <class="a" href= "{{url_for('view_auth_profile',auth_id=prayer_request.Author_id)}}">
+    {% if prayer_request.is_admin.role == "Admin" %}
+        <img src="{{ url_for('static', filename='admin_pp.png') }}" alt="🗑" style="float:left;width:42px;height:42px;">
+    {% else %}
+        <img src="{{ url_for('static', filename='default_pp.png') }}" alt="🗑" style="float:left;width:42px;height:42px;">
+    {% endif %}
+    {{ prayer_request.Author }}</a>
+</nav>
+<style>
+.button {position: relative;background-color: lightblue;border: none;font-size: 20px;color: #FFFFFF;padding: 20px;width: 150px;text-align: center;transition-duration: 0.7s;text-decoration: none;overflow: hidden;cursor: pointer;}
+.button:after {content: "Already prayed for";background: #f1f1f1;display: block;position: absolute;padding-top: 300%;padding-left: 350%;margin-left: -20px !important;margin-top: -120%;opacity: 0;transition: all 0.8s}
+.button:active:after {padding: 0;margin: 0;opacity: 1;transition: 0s}
+</style>
+    <p>{{ prayer_request.prayer_request}}</p>
+    <small>{{ prayer_request.date }}</small>
+    <h2></h2>
+
+    {% if prayer_request.same_author %}
+    <a onclick="togglepopup('{{prayer_request._id}}')">
+        <img src="{{ url_for('static', filename='bin.png') }}" alt="🗑" style="width:42px;height:42px;"> 
+        </a>
+    {% endif %} 
+    
+    <form action="{{url_for('prayed_for',request_id=prayer_request._id)}}" method="POST">
+    <button class="button" type="submit">Prayed for</button>
+    {% if prayer_request.prayed_for == 1 %}
+        {{prayer_request.prayed_for}} person prayed for this request
+    {% elif prayer_request.prayed_for == 0 %}
+        No one has answered this prayer request yet<br><br>Be the first to pray for this friend
+    {% else %}
+        {{prayer_request.prayed_for}} people prayed for this request
+    {% endif %}
+</form>
+    </div>    
+<dialog id="myPopup-{{prayer_request._id}}">
+  <h2>Are you sure you want to delete this Prayer Request?<br>This action can't be undone</h2>
+  <form action= "{{url_for('delete_request',request_id=prayer_request._id,author_id=prayer_request.Author_id)}}" method="GET">
+    <button>YES</button>
+  </form>
+  <form method="dialog">
+    <button id="closeBtn">No</button>
+  </form>
+</dialog>
+    
+{% endfor %}
+<script>
+function togglepopup(requestId){
+  const popup = document.getElementById('myPopup-'+requestId);
+  popup.showModal();
+}
+</script>
+</body>

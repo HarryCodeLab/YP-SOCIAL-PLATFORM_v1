@@ -1,0 +1,94 @@
+<body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YP Social Platform - My Profile</title>
+<!--NAVIGATION CODE STARTS HERE -->
+<style>
+ul {list-style-type: none; margin: 0; padding: 0; background-color: #333;top: 0;width: 100%;position: fixed;overflow-x: auto;white-space: nowrap;-webkit-overflow-scrolling: touch; }
+ul::-webkit-scrollbar {display: none;}
+ul {scrollbar-width: none;}
+li {display: inline-block;border-right: 1px solid #bbb;}
+li:last-child {border-right: none;}
+li a {display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;font-size: 20px;}
+li a:hover:not(.active) {background-color: blue;}
+.active {
+  background: #11998e;}
+body {margin:0; background-color:#f1f4fc;}  
+</style>
+body {margin:0;}
+<!-- Had to spend weekends and nights learning html and css. -->
+<ul>
+    <li><a href="/">Home🏘</a></li>
+    <li><a class="active" href="/View_your_profile">Profile👤</a></li>
+    <li><a href="/chats">Chat🖐</a></li>
+    <li><a href="/goals">Goals🏃</a></li>
+    <li><a href="/prayer_request">Prayer_requests🙏</a></li>
+    <li><a href="/bible_challenge">Bible_challenges📖</a></li>
+    <li><a href= "/about_yp">About YP🌟</a></li>
+    <li><a href="/progress_dashboard">Progress Dashboard📉</a></li>
+    <li><a href= "/view_videos">Daily Lessons📚</a></li>
+    <li><a href= "/help">Help ❓</a></li> 
+</ul>
+<!--NAVIGATION CODE ENDS HERE -->
+
+<style>        
+        .input-group { margin-bottom: 18px; text-align: left; }
+        label { display: block; font-size: 24px; font-weight: bold; color: #555; margin-bottom: 5px; text-transform: uppercase; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        input:focus { border-color: #1a5f7a; outline: none; }        
+        .btn-profile  { width: 100%; padding: 12px; background: red; color: white; border: none; border-radius: 6px; font-size: 32px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-sign_out  { width: 40%; padding: 12px; background: powderblue; color: white; border: none; border-radius: 50%; font-size: 32px;cursor: pointer; transition: 0.2s; }
+        .btn-profile:hover { background: #124559; }       
+        textarea { margin-bottom: 18px; text-align: left; width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px;white-space:pre-wrap;}
+    </style>
+    body {margin:0;}
+<h1><hr></h1>   
+<button onclick="togglepopup(true)" class="btn-sign_out">SIGN OUT</button>    
+<dialog id="myPopup">
+  <h2>Are you sure you want to sign out of this website?<br>All your information would be deleted<br>This action cannot be undone</h2>
+  <form action= "{{url_for('sign_out')}}" method="GET">
+    <button>YES</button>
+  </form>
+  <form method="dialog">
+    <button id="closeBtn">No</button>
+  </form>
+</dialog>
+<script>
+function togglepopup(){
+  const popup = document.getElementById('myPopup');
+  popup.showModal();
+}
+</script>
+
+<h1>EDIT YOUR PROFILE</h1>
+<h1>{{'__'*20}}</h1>    
+            
+<form action="/edit_profile" method="POST">
+    <div class="input-group">
+        <h1><label>YOUR USERNAME </label></h1>
+        <input type="text" name="username" placeholder="e.g., Harry" value="{{current_user.username}}" required>
+    </div>
+        
+    <div class="input-group">
+        <h1><label>EMAIL</label></h1>
+        <input type="email" name= "email" placeholder="e.g., harry@example.com" value="{{current_user.email}}" required>
+    </div>
+        
+    <div class="input-group">
+        <h1><label>PHONE NUMBER</label></h1>
+        <input type="number" name= "phone_number" placeholder="+237 " value= "{{current_user.phone_number}}" required>
+    </div>
+        
+    <div class="input-group">
+        <h1><label>YOUR CONGREGATION</label></h1>
+        <input type="text" name= "congregation" placeholder="e.g., PC MUEA"value= "{{current_user.congregation}}"  required>
+    </div>
+        
+        <h1><label>ABOUT YOU</label></h1>
+        <textarea name= "about_me" placeholder=" e.g My name is Harry, I'm a software developer"  required>{{current_user.about_me}}</textarea>
+        
+    <h1></h1>
+    <button type="submit" class="btn-profile">SAVE CHANGES</button>
+</form>
+</body>

@@ -1,0 +1,62 @@
+<body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YP Social Platform - Progress Dashboard</title>
+<!--NAVIGATION CODE STARTS HERE -->
+<style>
+ul {list-style-type: none; margin: 0; padding: 0; background-color: #333;top: 0;width: 100%;position: fixed;overflow-x: auto;white-space: nowrap;-webkit-overflow-scrolling: touch; }
+ul::-webkit-scrollbar {display: none;}
+ul {scrollbar-width: none;}
+li {display: inline-block;border-right: 1px solid #bbb;}
+li:last-child {border-right: none;}
+li a {display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;font-size: 20px;}
+li a:hover:not(.active) {background-color: blue;}
+.active {
+  background: #11998e;}
+body {margin:0; background-color:#f1f5fc;}
+</style>
+body {margin:0;}
+<!-- Had to spend weekends and nights learning html and css. -->
+<ul>
+   <li><a href="/">Home🏘</a></li>
+    <li><a href="/View_your_profile">Profile👤</a></li>
+    <li><a href="/chats">Chat🖐</a></li>
+    <li><a href="/goals">Goals🏃</a></li>
+    <li><a href="/prayer_request">Prayer_requests🙏</a></li>
+    <li><a href="/bible_challenge">Bible_challenges📖</a></li>
+    <li><a href= "/about_yp">About YP🌟</a></li>
+    <li><a class="active" href="/progress_dashboard">Progress Dashboard📉</a></li>
+    <li><a href= "/view_videos">Daily Lessons📚</a></li> 
+    <li><a href= "/help">Help ❓</a></li> 
+</ul>
+<!--NAVIGATION CODE ENDS HERE -->
+
+<style>
+table {  font-family: arial, sans-serif;  border-collapse: collapse;  width: 100%;}
+td, th {  border: 1px solid #dddddd;  text-align: center;  padding: 8px;}
+tr:nth-child(even) {  background-color: #f1f1f1;}
+</style>
+body {margin:0;}
+
+<h6>..<br></h6>
+<h3>When you submit a goal, your progress comes here.<br>Note: After submitting the goals completed for that day, you'll have to wait till 6pm the next day to submit goals completed for the day.</h3>
+<h1><hr></h1>
+<table>
+<tr>
+    <th>Day </th>
+    <th>Goals Completed / 5</th>
+    <th>Stars Earned</th>
+</tr>
+{% for goal in goal_data %}
+<tr>
+<td>{{goal.day}}</td>
+<td>{{goal.completed_goals}}</td>
+{% if goal.completed_goals != "None" %}
+<td>{{goal.completed_goals*"  ⭐"}}</td>
+{% else %}
+<td> -- </td>
+{% endif %}
+</tr>
+{% endfor %}
+</table>
+</body>

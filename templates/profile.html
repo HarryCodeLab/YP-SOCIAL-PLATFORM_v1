@@ -1,0 +1,72 @@
+<body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YP Social Platform - My Profile</title>
+<!--NAVIGATION CODE STARTS HERE -->
+<style>
+ul {list-style-type: none; margin: 0; padding: 0; background-color: #333;top: 0;width: 100%;position: fixed;overflow-x: auto;white-space: nowrap;-webkit-overflow-scrolling: touch; }
+ul::-webkit-scrollbar {display: none;}
+ul {scrollbar-width: none;}
+li {display: inline-block;border-right: 1px solid #bbb;}
+li:last-child {border-right: none;}
+li a {display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;font-size: 20px;}
+li a:hover:not(.active) {background-color: blue;}
+.active {
+  background: #11998e;}
+body {margin:0; background-color:#f1f6fb;}
+</style>
+body {margin:0;}
+<!-- Had to spend weekends and nights learning html and css. -->
+<ul>
+    <li><a href="/">Home🏘</a></li>
+    <li><a class="active" href="/View_your_profile">Profile👤</a></li>
+    <li><a href="/chats">Chat🖐</a></li>
+    <li><a href="/goals">Goals🏃</a></li>
+    <li><a href="/prayer_request">Prayer_requests🙏</a></li>
+    <li><a href="/bible_challenge">Bible_challenges📖</a></li>
+    <li><a href= "/about_yp">About YP🌟</a></li>
+    <li><a href="/progress_dashboard">Progress Dashboard📉</a></li>
+    <li><a href= "/view_videos">Daily Lessons📚</a></li>
+    <li><a href= "/help">Help ❓</a></li> 
+</ul>
+<!--NAVIGATION CODE ENDS HERE -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    .btn-profile  {width: 100%; padding: 12px; background: purple; color: white; border: none; border-radius: 6px; font-size: 32px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+    .btn-upload  {width: 35%; padding: 11px; background: lightgreen; color: white; border: none; border-radius: 50px; font-size: 30px; cursor: pointer; transition: 0.3s; }
+.btn-profile:hover {background: #124559; }
+</style>
+</head>
+<h1>YOUR PROFILE </h1>
+<h1>{{"__"*20}}</h1>
+<h1>User Name: {{current_user.username}}</h1>
+<h2>Phone Number: {{current_user.phone_number}}</h2>
+<h2>Email: {{current_user.email}}</h2>
+<h2>Your Congregation: {{current_user.congregation}}</h3>
+<h2>Role: {{current_user.role}}</h2>
+<h2>About Me: </h2>
+<h2 style="white-space:pre-wrap;">{{current_user.about_me}}</h2>
+{% if current_user.role != "Admin" %}
+    <form action ="/become_an_admin" method ="GET">
+    <button type="submit" class="btn-profile">BECOME AN ADMIN</button>
+    </form>
+{% endif %}
+<h1></h1>
+<h1></h1>
+<form action ="/edit_profile" method ="GET">
+<button type="submit" class="btn-profile">EDIT PROFILE</button>
+</form>
+{% if current_user.role == "Admin" %}
+    <form action ="/upload_video" method ="POST">
+    <button type="submit" class="btn-upload">UPLOAD A VIDEO🎬</button>
+    </form>
+{% endif %}
+<h3>. </h3>
+<h3>{{user_count}} signed in users</h3>
+</html>
+</body>

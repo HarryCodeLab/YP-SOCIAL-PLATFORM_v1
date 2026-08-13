@@ -1,0 +1,208 @@
+<body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YP Social Platform - Chat</title>
+<!--NAVIGATION CODE STARTS HERE -->
+<style>
+ul {list-style-type: none; margin: 0; padding: 0; background-color: #333;top: 0;width: 100%;position: fixed;overflow-x: auto;white-space: nowrap;-webkit-overflow-scrolling: touch; }
+ul::-webkit-scrollbar {display: none;}
+ul {scrollbar-width: none;}
+li {display: inline-block;border-right: 1px solid #bbb;}
+li:last-child {border-right: none;}
+li a {display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;font-size: 20px;}
+li a:hover:not(.active) {background-color: blue;}
+.active {
+  background: #11998e;}
+body {margin:0; background: #f1f7f9;}
+</style>
+body {margin:0;}
+<!-- Had to spend weekends and nights learning html and css. -->
+<ul>
+   <li><a href="/">Home🏘</a></li>
+    <li><a href="/View_your_profile">Profile👤</a></li>
+    <li><a class="active" href="/chats">Chat🖐</a></li>
+    <li><a href="/goals">Goals🏃</a></li>
+    <li><a href="/prayer_request">Prayer_requests🙏</a></li>
+    <li><a href="/bible_challenge">Bible_challenges📖</a></li>
+    <li><a href= "/about_yp">About YP🌟</a></li>
+    <li><a href="/progress_dashboard">Progress Dashboard📉</a></li>
+    <li><a href= "/view_videos">Daily Lessons📚</a></li> 
+    <li><a href= "/help">Help ❓</a></li> 
+</ul>
+<!--NAVIGATION CODE ENDS HERE -->
+
+<style>        
+        .input-group { margin-bottom: 18px; text-align: left; }
+        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        .textarea1 { width: 80%; padding: 12px; border: 1px solid #ddd; box-sizing: border-box; font-size: 12px; background-color: Lightgrey;border-radius:50px;}
+        .textarea2 { width: 100%; padding: 12px; border: 1px solid #ddd; box-sizing: border-box; font-size: 12px; background-color: powderblue;border-radius:10px;}
+        input:focus { border-color: #1a5f7a; outline: none; }        
+        .btn-profile  { width: 50%; padding: 12px; background: orange; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-profile:hover { background: #124559; }     
+       /* .dropbtn {  background-color: #4CAF50;  color: white;  padding: 16px;  font-size: 16px;  border: none;  cursor: pointer;} */
+        .dropbtn{font-size:42px;}
+        .dropdown {  position: relative;  display: inline-block;}
+        .dropdown-content { display: none;  position: absolute;  background-color: #e2f0d9;  min-width: 600px;    z-index: 1;}
+        .dropdown-content a {  padding: 12px 16px;text-decoration: none;display: block;width:85%;}
+        .dropdown-content a:hover {background-color: #f1f1f1}
+        .dropdown:hover .dropdown-content {display: block;}
+        .dropdown: hover .dropbtn{background-color: #3e8e41;}  
+</style>
+
+<h1>CHAT SECTION</h1>
+<h1>{{'__'*20}}</h1>    
+
+<!-- REMOVED ACTION AND METHOD: JavaScript handles this now -->
+<form id="MessageForm">
+    <div class="input-group">
+        <h4><label>Start a conversation, you can also ask for help with Bible challenges or scriptures</label></h4>
+        <textarea id="MessageInput" class="textarea2" name="message" placeholder="e.g., Can Someone please explain Hebrews 6?" required></textarea>
+        <button type="submit" class="btn-profile">SUBMIT MESSAGE</button>
+    </div>
+</form>
+
+<hr>
+
+<h2>Messages</h2>
+<span id="ActivePostCount">{{post_count}}</span> active posts
+
+<!-- This container wraps all messages so JavaScript knows where to drop new ones -->
+<div id="MessageContainer">
+{% for post in posts %}
+<div class="ChatBox" style="border:1px solid #ccc;padding:10px;margin:10px 0;border-radius:8px;background-color: #f9f9f9;">
+
+<nav>
+    <a       
+    href="{{url_for('view_auth_profile',auth_id=post.Author_id)}}">
+    {% if post.is_admin.role == "Admin" %}
+        <img src="{{ url_for('static', filename='admin_pp.png') }}" alt="🗑" style="float:left;width:42px;height:42px;">
+    {% else %}
+        <img src="{{ url_for('static', filename='default_pp.png') }}" alt="🗑" style="float:left;width:42px;height:42px;">
+    {% endif %}
+        {{" "*2}}{{  post.Author }}</a>
+</nav>
+
+    <!--img src= "{{current_user.profile_pic}}" alt="Profile pic" style="float:right;width:45px;height:45px;"-->
+    <p style="white-space:pre-wrap;" >{{ post.message }}</p>
+    <hr style="width:25%; text-align:left; margin-left:0;">
+    <small>{{ post.date }}</small>
+    <br>
+    <hr style="width:25%; text-align:left; margin-left:0;">
+    {% if post.already_liked %}
+    <a href="{{url_for('like_post',post_id=post._id)}}">
+        <img src="{{ url_for('static', filename='ellen_joy.png')}}" alt="❤" style="width:42px;height:42px;">
+    </a>
+    {% else %}
+    <a href="{{url_for('like_post',post_id=post._id)}}">
+        <img src="{{ url_for('static', filename='not_in_love.png')}}" alt="❤" style="width:42px;height:42px;">
+        </a>
+    {% endif %}
+    
+    {% if current_user.role == "Admin" %} 
+        <a onclick="togglepopup('{{post._id}}')">
+        <img src="{{ url_for('static', filename='bin.png') }}" alt="🗑" style="width:42px;height:42px;"> 
+        </a>
+        
+    {% elif post.same_author %}
+    <a onclick="togglepopup('{{post._id}}')">
+        <img src="{{ url_for('static', filename='bin.png') }}" alt="🗑" style="width:42px;height:42px;"> 
+        </a>
+      {% endif %}
+      
+    <br>{{post.like_count}}<br>
+    
+    <div class="dropdown">
+          <h1 class="dropbtn">💬</h1>
+          <h3>{{ post.comment_count }}</h3>
+          <div class="dropdown-content">
+              {% for c in post.comments %}
+                  <b><nav><a href="{{url_for('view_auth_profile',auth_id=c.author_id)}}">{{ c.author }}:</a></nav></b> {{ c.comment }}
+                  <br>{{"\n_"*15}}
+              {% endfor %}
+      </div>
+  </div>
+  
+<form action="{{url_for('comment',post_id=post._id)}}" method="POST">
+    <textarea class="textarea1" name="comment" placeholder="Write a comment..." required></textarea>
+    <button type="submit">COMMENT</button>
+</form> 
+<hr>
+    </div>
+    <h1> </h1>
+    <h1>..... </h1>
+    <h1>     </h1>
+    
+    
+<dialog id="myPopup-{{post._id}}">
+  <h2>Are you sure you want to delete this post?<br>This action can't be undone</h2>
+  <form action= "{{url_for('delete_post',post_id=post._id,author_id=post.Author_id)}}" method="GET">
+    <button>YES</button>
+  </form>
+  <form method="dialog">
+    <button id="closeBtn">No</button>
+  </form>
+</dialog>
+        
+{% endfor %}
+<script>
+function togglepopup(postId){
+  const popup = document.getElementById('myPopup-' + postId);
+  popup.showModal();
+}
+</script>
+
+</div>
+
+
+<!-- SocketIO JavaScript Connection Tools -->
+<script src="{{ url_for('static', filename='socketio.min.js') }}"></script>
+<script>
+    const socket = io();
+
+    const messageForm = document.getElementById('MessageForm');
+    const messageInput = document.getElementById('MessageInput');
+    const messageContainer = document.getElementById('MessageContainer');
+    const activePostCount = document.getElementById('ActivePostCount');
+
+    messageForm.addEventListener('submit', function(e) {
+     
+        
+        if(messageInput.value.trim() !== "") {
+            // Send message over the socket phone call
+            socket.emit('send_message', {
+                message: messageInput.value
+            });
+            messageInput.value = ""; // Clear text box
+        }
+    });
+
+    // 2. Listen for server broadcasting a new message
+    socket.on('receive_message', function(post) {
+        // Build the precise raw HTML chunk to drop on screen instantly
+        const newHtml = `
+        <div class="ChatBox" style="border:1px solid #ccc;padding:10px;margin:10px 0;border-radius:8px;">
+            <nav><a href="/View_auth_profile/${post.Author_id}">${post.Author}</a></nav>
+            <p>${post.message}</p>
+            <small>${post.date}</small>
+            <br>
+            <a href="/chats/like_post/${post._id}"><img src="/static/not_in_love.png" alt="❤" style="width:42px;height:42px;"></a>            
+            <a href="/chats/delete_post/${post._id}/${post.Author_id}"><img src="/static/bin.png" alt="🗑" style="width:42px;height:42px;"></a>
+            <br>${post.like_count}
+            <h4>Comments</h4>
+            <form action="/comment/${post._id}" method="POST">
+                <textarea name="comment" placeholder="Write a comment..." required></textarea>
+                <button type="submit">Comment</button>
+            </form> 
+            <hr>
+        </div>`;
+        
+        // Add new post to the top of the chat box feed container
+        messageContainer.insertAdjacentHTML('afterbegin', newHtml);
+        
+        // Bump up post counter text number by 1
+        let currentCount = parseInt(activePostCount.innerText);
+        activePostCount.innerText = currentCount + 1;
+    });
+</script>
+
+</body>
