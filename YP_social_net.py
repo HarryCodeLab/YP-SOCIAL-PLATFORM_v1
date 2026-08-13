@@ -42,7 +42,7 @@ print("=" * 50)
 print("MONGO_URI from env:", os.environ.get("MONGO_URI"))
 print("MONGO_URI in config:", app.config.get("MONGO_URI"))
 print("=" * 50)
-app.config["MONGO_URI"] = os.environ.get("MONGODB_URI")
+app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 mongo = PyMongo(app,server_api=ServerApi('1'))
 
 user_collection = mongo.db.users
