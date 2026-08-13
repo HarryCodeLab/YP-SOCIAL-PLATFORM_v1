@@ -29,8 +29,7 @@ from dotenv import load_dotenv
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 env_path = os.path.join(BASE_DIR, ".env")
-if os.path.exists(env_path):
-    load_dotenv(env_path)
+load_dotenv()
 
 
 app = Flask(__name__)
