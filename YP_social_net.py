@@ -29,14 +29,15 @@ from dotenv import load_dotenv
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 env_path = os.path.join(BASE_DIR, ".env")
-load_dotenv(env_path)
+if os.path.exists(env_path):
+    load_dotenv(env_path)
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("APP_SECRET_KEY")
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Database Configuration
-app.config["MONGO_URI"] = "mongodb://localhost:27017/yp_social_db" #os.getenv("MONGODB_URI")
+app.config["MONGO_URI"] = os.getenv("MONGODB_URI")
 mongo = PyMongo(app,server_api=ServerApi('1'))
 
 user_collection = mongo.db.users
