@@ -745,7 +745,8 @@ def help():
     return render_template("help.html")
         
 if __name__ == "__main__":
-    socketio.run(app,debug=False, host="0.0.0.0", port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    socketio.run(app, debug=False, host="0.0.0.0", port=port)
     
 #_______________________________FINISHING PRAYER_______________________________________
 '''LORD, THANK YOU FOR HELPING ME BUILD THIS PROJECT FOR YP MEMBERS LIKE ME TO COME CLOSER TO YOU AND STUDY WITH EACH OTHER.
