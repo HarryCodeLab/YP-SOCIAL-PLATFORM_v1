@@ -37,7 +37,7 @@ app.secret_key = os.environ.get("APP_SECRET_KEY")
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Database Configuration
-app.config["MONGO_URI"] = os.getenv("MONGODB_URI")
+app.config["MONGO_URI"] = os.environ.get("MONGODB_URI")
 mongo = PyMongo(app,server_api=ServerApi('1'))
 
 user_collection = mongo.db.users
@@ -53,7 +53,7 @@ mongo.db.comments.create_index("created_at", expireAfterSeconds=259201)
 mongo.db.prayer_requests.create_index("created_at", expireAfterSeconds=259201)
 mongo.db.completed_goals.create_index("created_at", expireAfterSeconds=648000)
 
-admin_password=os.getenv("ADMIN_PASSWORD")
+admin_password=os.environ.get("ADMIN_PASSWORD")
 
 # Initializing Flask-Login
 login_manager = LoginManager()
@@ -612,8 +612,8 @@ def upload_video():
                 "title":request.form["title"],
                 "mediatype" : "movies"
             },
-                access_key=os.getenv("IA_ACCESS_KEY"),
-                secret_key=os.getenv("IA_SECRET_KEY")
+                access_key=os.environ.get("IA_ACCESS_KEY"),
+                secret_key=os.environ.get("IA_SECRET_KEY")
             )
         os.remove(temp_path)
     except Exception as e:
