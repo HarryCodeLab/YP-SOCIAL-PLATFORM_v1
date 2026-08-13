@@ -39,7 +39,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 # Database Configuration
 
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
-mongo = PyMongo(app,server_api=ServerApi('1'))
+mongo = PyMongo(app)
 print("=" * 50)
 print("MONGO_URI from env:", os.environ.get("MONGO_URI"))
 print("MONGO_URI in config:", app.config.get("MONGO_URI"))
