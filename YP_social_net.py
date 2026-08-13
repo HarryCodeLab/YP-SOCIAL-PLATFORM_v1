@@ -39,7 +39,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 MONGO_URI = os.getenv("MONGODB_URI")
 
-client = pymongo.MongoClient(MONGO_URI, server_api=ServerApi('1'))
+client = MongoClient(MONGO_URI, server_api=ServerApi('1'))
 db = client['yp_social_db']
 
 user_collection = db["users"]
@@ -47,6 +47,7 @@ post_collection = db["posts"]
 comment_collection = db["comments"]
 prayer_request_collection = db["prayer_requests"]
 likes= db["likes"]
+answered_request = db["answered_reques"]
 prayed_for = db["prayed_for"]
 completed_goals = db["completed_goals"]
 video_collection = db["videos"]
@@ -398,7 +399,7 @@ def write_prayer_request():
     prayer_requests = list(prayer_request_collection.find().sort("_id", -1))
     count  = prayer_request_collection.count_documents({})
     for pr_rq in prayer_requests:
-        pr_rq["prayed_for"] = mongo.db.answered_request.count_documents({
+        pr_rq["prayed_for"] = answered_request.count_documents({
             "request_id": pr_rq["_id"]
         })
         pr_rq["same_author"] = ObjectId(current_user.id) == ObjectId(pr_rq["Author_id"])
@@ -554,12 +555,12 @@ def prayed_for(request_id):
     if not current_user.is_authenticated:
         return redirect(url_for("login"))
     if request.method == "POST":
-        already_prayed_for = mongo.db.answered_request.find_one({
+        already_prayed_for = answered_request.find_one({
         "request_id":ObjectId(request_id),
         "user_id":ObjectId(current_user.id)})
         
         if not already_prayed_for:
-            mongo.db.answered_request.insert_one({
+            answered_request.insert_one({
                 "request_id":ObjectId(request_id),
                 "user_id":ObjectId(current_user.id),
             })
@@ -577,7 +578,7 @@ def delete_request(request_id,author_id):
         
         if ObjectId(current_user.id) == ObjectId(author_id):
             prayer_request_collection.delete_many({"_id":ObjectId(request_id)})
-            mongo.db.answered_request.delete_many({"request_id":ObjectId(request_id)})
+            answered_request.delete_many({"request_id":ObjectId(request_id)})
             
         else:
             return redirect(url_for("write_prayer_request"))
@@ -756,7 +757,7 @@ if __name__ == "__main__":
 FATHER LORD, I PRAY THAT YOU HELP THIS PROJECT TO BECOME A DAILY TOOL FOR YP MEMBERS TO SPEND THEIR TIME THE RIGHT WAY, DOING THE RIGHT THINGS.
 I ALSO PRAY FOR ALL MY FRIENDS WHO HELPED ME AND MOTIVATED ME WITH THIS PROJECT THAT YOU'LL ALWAYS BLESS THEM AND BE WITH THEM.
 GOD, YOU KNOW MY BIGGEST BATTLES. YOU KNOW THE WAR GOING ON IN MY MIND AND HEART RIGHT NOW, YOU KNOW HOW MY DAD'S GIVING ME A HARD TIME WITH MY CAREER OPTION AND MY PROJECTS PLUS ALL THIS DOCTORING STUFF. I'VE CHOSEN MY PATH AND THAT'S ENGINEERING BUT HE JUST CAN'T SEEM TO ACCEPT IT. 
-AND I WISH I COULD BOUNCE BACK IN SCHOOL AS THE TOP-DAWG AGAIN. I'VE BEEN HAVING EMPTY FEELINGS IN MY HEART AND NOT KNOWING HOW TO FEEL.
-FATHER I PRAY THAT YOU GRANT ME INNER PEACE DURING THIS MOMENTS OF SADNESS AND EMPTINESS.
+AND I WISH I COULD BOUNCE BACK IN SCHOOL AS THE TOP-DAWG AGAIN. I'VE BEEN HAVING SAD FEELINGS IN MY HEART AND NOT KNOWING HOW TO FEEL.
+FATHER I PRAY THAT YOU GRANT ME INNER PEACE DURING THIS MOMENTS OF SADNESS.
 AND ALSO, GOD PLEASE HELP ME WITH BETTER TOOLS SO AS TO IMPROVE MY SKILLS
 WE ASK ALL THIS THROUGH JESUS CHRIST YOUR SON OUR LORD; AMEN'''    
