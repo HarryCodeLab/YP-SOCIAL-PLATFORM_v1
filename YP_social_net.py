@@ -216,6 +216,35 @@ def edit_profile():
                 "phone_number": phone_number,
             }}
         )
+        
+        post_collection.update_many(
+        {"Author_id":ObjectId(current_user.id)},
+        {"$set": {
+        "Author": username,
+        }}
+        )
+        
+        prayer_request_collection.update_many(
+        {"Author_id":ObjectId(current_user.id)},
+        {"$set": {
+        "Author": username,
+        }}
+        )
+        
+        video_collection.update_many(
+        {"Author_id":ObjectId(current_user.id)},
+        {"$set": {
+        "Author": username,
+        }}
+        )
+        
+        comment_collection.update_many(
+        {"author_id":ObjectId(current_user.id)},
+        {"$set": {
+        "author": username,
+        }}
+        )
+        
         flash("Profile updated!")
         return redirect(url_for("view_profile"))
     
@@ -466,7 +495,7 @@ def submit_completed_goals():
     if request.method == "POST":
         completed_goals.insert_one({
             "user_id": ObjectId(current_user.id),
-            "completed_goals": int(request.form["goals_completed"]),
+            "completed_goals": request.form["goals_completed"],
             "day": str(datetime.datetime.now().strftime("%A")),
             "created_at": str(datetime.datetime.utcnow()),
             "submitted_at": datetime.datetime.now(),
