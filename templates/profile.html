@@ -73,7 +73,7 @@ body {margin:0;}
 function toggle_user_list(){
     document.getElementById("Leah").innerHTML=    
         
-    "<hr> {% for user in users %} {% if user.role == 'Admin' %} <nav> <a href='{{url_for('view_auth_profile',auth_id=user._id)}}'> <img src='{{ url_for('static', filename='admin_pp.png') }}' alt='🗑' style='float:left;width:42px;height:42px;'>{{" "*2}} {{user.username }}<br></a></nav> {% else %} <nav> <a href='{{url_for('view_auth_profile',auth_id=user._id)}}'> <img src='{{ url_for('static', filename='default_pp.png') }}' alt='🗑' style='float:left;width:42px;height:42px;'>{{" "*2}} {{user.username }}<br> {% endif %} <hr style='width:70%; margin-left:0;'> {% endfor %}"
+    "<hr> {% for user in users %} {% if user.role == 'Admin' %} <nav> <a href='{{url_for('view_auth_profile',auth_id=user._id)}}'> <img src='{{ url_for('static', filename='admin_pp.png') }}' alt='🗑' style='float:left;width:42px;height:42px;'>{{" "*2}} {{user.username }}<br></a></nav> {% else %} <nav> <a href='{{url_for('view_auth_profile',auth_id=user._id)}}'> <img src='{{ url_for('static', filename='default_pp.png') }}' alt='🗑' style='float:left;width:42px;height:42px;'>{{" "*2}} {{user.username }}</a></nav><br> {% endif %} <hr style='width:70%; margin-left:0;'> {% endfor %}"
     }
     
 </script>
