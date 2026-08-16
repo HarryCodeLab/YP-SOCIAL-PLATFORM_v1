@@ -493,14 +493,24 @@ def submit_completed_goals():
         return redirect(url_for("login"))
         
     if request.method == "POST":
-        completed_goals.insert_one({
-            "user_id": ObjectId(current_user.id),
-            "completed_goals": request.form["goals_completed"],
-            "day": str(datetime.datetime.now().strftime("%A")),
-            "created_at": str(datetime.datetime.utcnow()),
-            "submitted_at": datetime.datetime.now(),
-            #"time_stamp":datetime.datetime.now("%x")
-        })
+        
+        if request.form["goals_completed"] == "None":
+            completed_goals.insert_one({
+                "user_id": ObjectId(current_user.id),
+                "completed_goals": "None",
+                "day": str(datetime.datetime.now().strftime("%A")),
+                "created_at": str(datetime.datetime.utcnow()),
+                "submitted_at": datetime.datetime.now(),
+            })
+        
+        else:
+            completed_goals.insert_one({
+                "user_id": ObjectId(current_user.id),
+                "completed_goals": int(request.form["goals_completed"]),
+                "day": str(datetime.datetime.now().strftime("%A")),
+                "created_at": str(datetime.datetime.utcnow()),
+                "submitted_at": datetime.datetime.now(),
+            })
     return redirect(url_for("view_goals"))
 
 @app.route("/about_yp",methods=["POST","GET"])
