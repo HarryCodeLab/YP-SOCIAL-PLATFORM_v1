@@ -255,8 +255,8 @@ def edit_profile():
 def view_profile():
     if current_user.is_authenticated:  
         user_count = user_collection.count_documents({})
-        return render_template("profile.html",user_count=user_count)
-    return redirect(url_for('login'))
+        users = list(user_collection.find().sort("username"))
+    return render_template("profile.html",user_count=user_count,users=users)
           
 @app.route("/chats", methods=["GET"])
 @login_required  
@@ -682,7 +682,6 @@ def upload_video():
     return redirect(url_for("home"))
         
 @app.route("/view_videos",methods=["POST","GET"])
-@login_required
 def view_videos():
    if not current_user.is_authenticated:
         return redirect(url_for("login"))
