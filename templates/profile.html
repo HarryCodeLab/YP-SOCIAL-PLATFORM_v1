@@ -70,13 +70,26 @@ body {margin:0;}
 <h3 onclick="toggle_user_list()" style="color:blue;">{{user_count}} signed in users. Click to view all users</h3>
 <h4 id="Leah" style="color: rgb(255,165,20);"></h3>
 <script>
-function toggle_user_list(){
-    document.getElementById("Leah").innerHTML=    
-        
-    "<hr> {% for user in users %} {% if user.role == 'Admin' %} <nav> <a href='{{url_for('view_auth_profile',auth_id=user._id)}}'> <img src='{{ url_for('static', filename='admin_pp.png') }}' alt='🗑' style='float:left;width:42px;height:42px;'>{{" "*2}} {{user.username }}</a></nav> {% else %} <nav> <a href='{{url_for('view_auth_profile',auth_id=user._id)}}'> <img src='{{ url_for('static', filename='default_pp.png') }}' alt='🗑' style='float:left;width:42px;height:42px;'>{{" "*2}} {{user.username }}</a></nav> {% endif %} <hr style='width:70%; margin-left:0;'> {% endfor %}"
-    }
+function toggle_user_list() {
     
+    document.getElementById("Leah").innerHTML = `
+    <hr> 
+    {% for user in users %} 
+        <nav> 
+            <a href="{{ url_for('view_auth_profile', auth_id=user._id) }}"> 
+                {% if user.role == 'Admin' %} 
+                    <img src="{{ url_for('static', filename='admin_pp.png') }}" alt="🗑" style="float:left;width:42px;height:42px;"> 
+                {% else %} 
+                    <img src="{{ url_for('static', filename='default_pp.png') }}" alt="🗑" style="float:left;width:42px;height:42px;"> 
+                {% endif %}
+                &nbsp;&nbsp;{{ user.username }}
+            </a>
+        </nav> 
+        <hr style="width:70%; margin-left:0;"> 
+    {% endfor %}`;
+}
 </script>
+
 
 </html>
 </body>
