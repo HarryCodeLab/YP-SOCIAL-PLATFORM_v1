@@ -776,7 +776,7 @@ def delete_video(video_id,author_id):
 def sign_out():
     if request.method == "GET":
         user_collection.delete_one({"_id":ObjectId(current_user.id)})
-        completed_goals.delete({"user_id":ObjectId(current_user.id)})
+        completed_goals.delete_one({"user_id":ObjectId(current_user.id)})
         logout_user()
         
     return redirect(url_for("login"))
