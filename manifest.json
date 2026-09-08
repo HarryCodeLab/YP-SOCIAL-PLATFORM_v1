@@ -1,0 +1,21 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "fullscreen",
+  "name": "YP SOCIALS",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "YP CONNECT",
+  "start_url": "/",
+  "theme_color": "#ffffff",
+  "description": "A social media platform built for Young Presbyterians from all over the PCC to meet, learn more about God, share their faith with each other, study the Bible with each other, pray for each other and learn from videos, rather than scrolling endlessly on Internet sites (turning doom scrolling into Faith-Scrolling ).\nSpecial Thanks to all my friends who helped me make this Project successful.\nIn the future this project would be progressively updated.\nEverything with CHRIST, Keep close to CHRIST",
+  "categories": [
+    "social"
+  ]
+  "icons": [
+      {
+          "src": "static/yp_social_platform_logo.png",
+          "sizes": "512x512"
+      }
+  ]
+}
