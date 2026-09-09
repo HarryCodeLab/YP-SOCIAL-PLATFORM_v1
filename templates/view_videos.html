@@ -53,12 +53,12 @@ overflow: hidden;
 <h3>{{video_count}} admin videos</h3>
 {% for video in videos %}
 <div style="border:1px solid #ccc;padding:10px;margin:10px 0;border-radius:8px;background-color:lightgrey;">
-    Posted by admin <a   
+    Posted by admin: <br> <a   
     href="{{url_for('view_auth_profile',auth_id=video.author_id)}}">
     <img src="{{ url_for('static', filename='admin_pp.png') }}" alt="🗑" style="float:left;width:42px;height:42px;"> {{ video.author }}</a>
 </nav>
-    <h3>{{ video.title }}</h3>
-    <video width="100%" controls>
+    <h3><br>{{ video.title }}</h3>
+    <video width="100%" autoplay loop controls>
         <source src="{{ video.video_url }}" type="video/mp4">
         <source src="{{ video.video_url }}" type="video/webm">
         <source src="{{ video.video_url }}" type="video/ogg">
@@ -91,11 +91,11 @@ overflow: hidden;
               {% endfor %}
               </div>
       </div>
-<p id="caption" style="white-space:pre-wrap;" class="caption-text">{{ video.caption }}</p><button style="background-color:lightgrey;"onclick="showMore()">
-
+      
+<p id="caption" style="white-space:pre-wrap;" class="caption-text">{{ video.caption }}</p><p onclick="showMore()">
  ...more
-
- </button>
+ </p>
+ 
 <br>
 <br><small>{{ video.date }} </small><br>
 
