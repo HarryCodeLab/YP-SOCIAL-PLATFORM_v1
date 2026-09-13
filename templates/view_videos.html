@@ -53,7 +53,7 @@ overflow: hidden;
 <h3>{{video_count}} admin videos</h3>
 {% for video in videos %}
 <div style="border:1px solid #ccc;padding:10px;margin:10px 0;border-radius:8px;background-color:lightgrey;">
-    Posted by admin: <br> <a   
+    Posted by admin: <br> <a style="background-color: transparent; text-decoration: none;"
     href="{{url_for('view_auth_profile',auth_id=video.author_id)}}">
     <img src="{{ url_for('static', filename='admin_pp.png') }}" alt="🗑" style="float:left;width:42px;height:42px;"> <h3>{{ video.author }}</h3></a>
 </nav>
