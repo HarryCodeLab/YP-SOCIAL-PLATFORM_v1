@@ -60,13 +60,14 @@ body {margin:0;}
 {% for prayer_request in prayer_requests %}
 <div style="border:1px solid #ccc;padding:10px;margin:10px 0;border-radius:8px;">
 <nav>
-    <a <class="a" href= "{{url_for('view_auth_profile',auth_id=prayer_request.Author_id)}}">
+    <a style="background-color: transparent; text-decoration: none;"
+      <class="a" href= "{{url_for('view_auth_profile',auth_id=prayer_request.Author_id)}}">
     {% if prayer_request.is_admin.role == "Admin" %}
         <img src="{{ url_for('static', filename='admin_pp.png') }}" alt="🗑" style="float:left;width:42px;height:42px;">
     {% else %}
         <img src="{{ url_for('static', filename='default_pp.png') }}" alt="🗑" style="float:left;width:42px;height:42px;">
     {% endif %}
-    {{ prayer_request.Author }}</a>
+    <h1>{{ prayer_request.Author }}</h1></a>
 </nav>
 <style>
 .button {position: relative;background-color: lightblue;border: none;font-size: 20px;color: #FFFFFF;padding: 20px;width: 150px;text-align: center;transition-duration: 0.7s;text-decoration: none;overflow: hidden;cursor: pointer;}
