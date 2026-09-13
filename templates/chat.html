@@ -72,14 +72,14 @@ body {margin:0;}
 <div class="ChatBox" style="border:1px solid #ccc;padding:10px;margin:10px 0;border-radius:8px;background-color: #f9f9f9;">
 
 <nav>
-    <a       
+    <a style="background-color: transparent; text-decoration: none;"
     href="{{url_for('view_auth_profile',auth_id=post.Author_id)}}">
     {% if post.is_admin.role == "Admin" %}
         <img src="{{ url_for('static', filename='admin_pp.png') }}" alt="🗑" style="float:left;width:42px;height:42px;">
     {% else %}
         <img src="{{ url_for('static', filename='default_pp.png') }}" alt="🗑" style="float:left;width:42px;height:42px;">
     {% endif %}
-        {{" "*2}}{{  post.Author }}</a>
+        {{" "*2}} <h1>{{ post.Author }}</h1></a>
 </nav>
 
     <!--img src= "{{current_user.profile_pic}}" alt="Profile pic" style="float:right;width:45px;height:45px;"-->
