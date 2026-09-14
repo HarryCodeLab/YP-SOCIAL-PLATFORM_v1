@@ -151,7 +151,7 @@ def login():
             "role" : "User",
             "phone_number": number,
             "congregation": congregation.upper(),
-            "profile_pic_url" : " '{{url_for('static', filename='bin.png')}}' ",
+            "profile_pic_url" : "None",
             "about_me" : about_me.capitalize()
         }
         
@@ -209,10 +209,10 @@ def edit_profile():
         user_collection.update_many(
             {"_id": ObjectId(current_user.id)},
             {"$set": {
-                "username": username,
-                "email": email,
-                "congregation": congregation,
-                "about_me": about_me,
+                "username": username.title(),
+                "email": email.lower(),
+                "congregation": congregation.upper(),
+                "about_me": about_me.capitalize(),
                 "phone_number": phone_number,
             }}
         )
@@ -220,28 +220,28 @@ def edit_profile():
         post_collection.update_many(
         {"Author_id":ObjectId(current_user.id)},
         {"$set": {
-        "Author": username,
+        "Author": username.title(),
         }}
         )
         
         prayer_request_collection.update_many(
         {"Author_id":ObjectId(current_user.id)},
         {"$set": {
-        "Author": username,
+        "Author": username.title(),
         }}
         )
         
         video_collection.update_many(
         {"Author_id":ObjectId(current_user.id)},
         {"$set": {
-        "Author": username,
+        "Author": username.title(),
         }}
         )
         
         comment_collection.update_many(
         {"author_id":ObjectId(current_user.id)},
         {"$set": {
-        "author": username,
+        "author": username.title(),
         }}
         )
         
@@ -249,7 +249,7 @@ def edit_profile():
         return redirect(url_for("view_profile"))
     
     return render_template("edit_profile.html")
-           
+
 @app.route("/submit", methods=["GET", "POST"])        
 @login_required
 def view_profile():
