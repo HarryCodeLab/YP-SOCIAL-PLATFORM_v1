@@ -58,7 +58,7 @@ overflow: hidden;
     <img src="{{ url_for('static', filename='admin_pp.png') }}" alt="🗑" style="float:left;width:42px;height:42px;"> <h3>{{ video.author }}</h3></a>
 </nav>
     <h3><br>{{ video.title }}</h3>
-    <video width="100%" autoplay muted loop controls>
+    <video width="100%" loop controls>
         <source src="{{ video.video_url }}" type="video/mp4">
         <source src="{{ video.video_url }}" type="video/webm">
         <source src="{{ video.video_url }}" type="video/ogg">
