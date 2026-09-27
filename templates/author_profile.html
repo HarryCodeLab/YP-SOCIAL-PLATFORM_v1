@@ -46,10 +46,17 @@ body {margin:0;}
 <h1>{{"__"*20}}</h1>
 {% for author in authors %}
 
-{% if author.role == "Admin" %}
-<img src="{{ url_for('static', filename='admin_pp.png') }}" alt="🗑" style="float:center;width:60%;">
+{% if author.profile_pic_url == "None" %}
+
+    {% if author.role == "Admin" %}
+        <img src="{{ url_for('static', filename='admin_pp.png') }}" alt="🗑" style="float:center;width:60%;">
+    {% else %}
+        <img src="{{ url_for('static', filename='default_pp.png') }}" alt="🗑" style="float:center;width:60%;">
+    {% endif %}
+    
 {% else %}
-<img src="{{ url_for('static', filename='default_pp.png') }}" alt="🗑" style="float:center;width:60%;">
+    <img src="{{author.profile_pic_url}}" alt="🗑" style="float:center;width:60%;border-radius:50%;">
+    
 {% endif %}
 
 <h1>User Name: <span style="color:blue;font-weight:bold">{{author.username}}</span></h1>
