@@ -72,18 +72,28 @@ body {margin:0;}
 <div class="ChatBox" style="border:1px solid #ccc;padding:10px;margin:10px 0;border-radius:8px;background-color: #f9f9f9;">
 
 <nav>
-    <a style="background-color: transparent; text-decoration: none;"
+    <a style="background-color: transparent; text-decoration: none;"   
     href="{{url_for('view_auth_profile',auth_id=post.Author_id)}}">
-    {% if post.is_admin.role == "Admin" %}
-        <img src="{{ url_for('static', filename='admin_pp.png') }}" alt="🗑" style="float:left;width:42px;height:42px;">
+    
+    {% if post.is_admin.profile_pic_url == "None" %}
+    
+        {% if post.is_admin.role == "Admin" %}
+            <img src="{{ url_for('static', filename='admin_pp.png') }}" alt="" style="float:left;width:42px;height:42px;">
+            
+        {% else %}
+            <img src="{{ url_for('static', filename='default_pp.png') }}" alt="" style="float:left;width:42px;height:42px;">
+            
+        {% endif %}
+        
     {% else %}
-        <img src="{{ url_for('static', filename='default_pp.png') }}" alt="🗑" style="float:left;width:42px;height:42px;">
+        <img src="{{post.is_admin.profile_pic_url}}" alt="" style="float:left;width:42px;height:42px;border-radius:50%;">
     {% endif %}
-        {{" "*2}} <h1>{{ post.Author }}</h1></a>
+    
+        {{" "*2}} <h1>{{post.Author }}</h1></a>
 </nav>
 
     <!--img src= "{{current_user.profile_pic}}" alt="Profile pic" style="float:right;width:45px;height:45px;"-->
-    <p style="white-space:pre-wrap;" >{{ post.message }}</p>
+    <p style="white-space:pre-wrap;">{{ post.message }}</p>
     <hr style="width:25%; text-align:left; margin-left:0;">
     <small>{{ post.date }}</small>
     <br>
@@ -194,8 +204,7 @@ function togglepopup(postId){
                 <button type="submit">Comment</button>
             </form> 
             <hr>
-        </div>`;
-        
+        </div>`;        
         // Add new post to the top of the chat box feed container
         messageContainer.insertAdjacentHTML('afterbegin', newHtml);
         
