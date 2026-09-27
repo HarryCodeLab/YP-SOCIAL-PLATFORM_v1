@@ -38,12 +38,35 @@ body {margin:0;}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
     .btn-profile  {width: 100%; padding: 12px; background: purple; color: white; border: none; border-radius: 6px; font-size: 32px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-    .btn-upload  {width: 35%; padding: 11px; background: lightgreen; color: white; border: none; border-radius: 50px; font-size: 30px; cursor: pointer; transition: 0.3s; }
+    .btn-upload  {width: 35%; padding: 11px; background: lightgreen; color: white; border: none; border-radius: 50%; font-size: 30px; cursor: pointer; transition: 0.3s; }
 .btn-profile:hover {background: #124559; }
 </style>
 </head>
 <h1>YOUR PROFILE </h1>
 <h1>{{"__"*20}}</h1>
+{% if current_user.profile_pic_url == "None" %}
+
+    {% if current_user.role == "Admin" %}
+        <img src="{{ url_for('static', filename='admin_pp.png') }}" alt="🗑" style="float:center;width:60%;">
+    {% else %}
+        <img src="{{ url_for('static', filename='default_pp.png') }}" alt="🗑" style="float:center;width:60%;">
+    {% endif %}
+    
+{% else %}
+    <img src="{{current_user.profile_pic}}" alt="🗑" style="float:center;width:60%;border-radius:50%;">
+{% endif %}
+
+<form action="/upload_profile_pic" method="GET">
+    <button style="width:45%;border-radius:25%;transition:0.5s;background: transparent;font-weight: bold; font-size:25px;">Upload Profile Picture</button>
+</form>
+
+{% if current_user.profile_pic_url != "None" %}
+    <br>
+    <form action="/delete_profile_pic" method="GET">
+    <button style="width:45%;border-radius:25%;transition:0.5s;background: transparent;font-weight: bold; font-size:25px;">Delete Profile Picture</button>
+    </form>
+{% endif %}    
+<br>    
 <h1>User Name: {{current_user.username}}</h1>
 <h2>Phone Number: {{current_user.phone_number}}</h2>
 <h2>Email: {{current_user.email}}</h2>
@@ -51,45 +74,58 @@ body {margin:0;}
 <h2>Role: {{current_user.role}}</h2>
 <h2>About Me: </h2>
 <h2 style="white-space:pre-wrap;">{{current_user.about_me}}</h2>
+
 {% if current_user.role != "Admin" %}
     <form action ="/become_an_admin" method ="GET">
     <button type="submit" class="btn-profile">BECOME AN ADMIN</button>
     </form>
 {% endif %}
+
 <h1></h1>
 <h1></h1>
 <form action ="/edit_profile" method ="GET">
 <button type="submit" class="btn-profile">EDIT PROFILE</button>
 </form>
+
 {% if current_user.role == "Admin" %}
     <form action ="/upload_video" method ="POST">
     <button type="submit" class="btn-upload">UPLOAD A VIDEO🎬</button>
     </form>
 {% endif %}
+
 <h3>. </h3>
 <h3 onclick="toggle_user_list()" style="color:blue;">{{user_count}} signed in users. Click to view all users</h3>
 <h4 id="Leah" style="color: rgb(255,165,20);"></h3>
+
 <script>
-function toggle_user_list() {
-    
-    document.getElementById("Leah").innerHTML = `
+function toggle_user_list(){
+    document.getElementById("Leah").innerHTML= `
+        
     <hr> 
     {% for user in users %} 
-        <nav> 
-            <a href="{{ url_for('view_auth_profile', auth_id=user._id) }}"> 
-                {% if user.role == 'Admin' %} 
-                    <img src="{{ url_for('static', filename='admin_pp.png') }}" alt="🗑" style="float:left;width:42px;height:42px;"> 
-                {% else %} 
-                    <img src="{{ url_for('static', filename='default_pp.png') }}" alt="🗑" style="float:left;width:42px;height:42px;"> 
-                {% endif %}
-                &nbsp;&nbsp;{{ user.username }}
-            </a>
-        </nav> 
-        <hr style="width:70%; margin-left:0;"> 
-    {% endfor %}`;
-}
+        {% if user.profile_pic_url == "None" %}
+    
+        {% if user.role == 'Admin' %} 
+            <nav> <a href='{{url_for('view_auth_profile',auth_id=user._id)}}'> 
+            <img src='{{ url_for('static', filename='admin_pp.png') }}' alt='🗑' style='float:left;width:42px;height:42px;'>{{" "*2}} {{user.username }}<br><hr style='width:70%; margin-left:0;'></a></nav> 
+            
+        {% else %} 
+            
+            <nav> <a href='{{url_for('view_auth_profile',auth_id=user._id)}}'> 
+            <img src='{{ url_for('static', filename='default_pp.png') }}' alt='🗑' style='float:left;width:42px;height:42px;'>{{" "*2}} {{user.username }}<br> <hr style='width:70%; margin-left:0;'> </a></nav> 
+       {% endif %}
+       
+        {% else %}
+    
+        <nav> <a href='{{url_for('view_auth_profile',auth_id=user._id)}}'> 
+            <img src='{{ user.profile_pic_url }}' alt='🗑' style='float:left;width:42px;height:42px;'>{{" "*2}} {{user.username }}<br> <hr style='width:70%; margin-left:0;'> </a></nav> 
+            
+        {% endif %}             
+    {% endfor %}
+    `
+    }
+    
 </script>
-
 
 </html>
 </body>
