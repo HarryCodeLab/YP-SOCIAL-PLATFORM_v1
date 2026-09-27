@@ -74,7 +74,8 @@ class User(UserMixin):
         self.congregation = user_data['congregation']
         self.phone_number = user_data['phone_number']
         self.role = user_data["role"]
-        self.profile_pic = user_data["profile_pic_url"]
+        self.profile_pic_url = user_data["profile_pic_url"]
+        self.profile_pic_public_id = user_data["profile_pic_public_id"]
         self.about_me = user_data["about_me"]
 
     @staticmethod
@@ -152,6 +153,7 @@ def login():
             "phone_number": number,
             "congregation": congregation.upper(),
             "profile_pic_url" : "None",
+            "profile_pic_public_id" : "None",
             "about_me" : about_me.capitalize()
         }
         
@@ -787,6 +789,55 @@ def help():
     if not current_user.is_authenticated:
         return redirect(url_for("login"))    
     return render_template("help.html")
+@app.route("/upload_profile_pic",methods=["GET","POST"])           
+@login_required
+def upload_profile_pic():
+    if request.method == "POST": 
+        profile_pic = request.files["profile_pic"]
+        os.makedirs("User_uploads",exist_ok=True)
+        filename=secure_filename(profile_pic.filename)
+        temporary_path=os.path.join("User_uploads",filename)
+        
+        unique_identifier = uuid.uuid4().hex
+        try:
+                upload_result = cloudinary.uploader.upload(
+                "User_uploads/{filename}",
+                folder = "YP-CONNECT_PROFILE_PICTURES",
+                public_id = unique_identifier
+                )
+                os.remove(temporary_path)
+        except Exception as E:
+                return render_template_string("""<h1>Sorry, an exception occurred.Your Profile Picture could not be uploaded, check your internet connection and try again</h1><form action = "/View_your_profile">
+    <button type="submit" class="btn-profile">Back</button>
+</form>""")
+
+        user_collection.update_one({
+        "_id":ObjectId(current_user.id)},
+        {"$set":
+                {
+                "profile_pic_url":upload_result.get("secure_url"),
+                "profile_pic_public_id":unique_identifier
+                }
+        }
+        )
+        return redirect(url_for("view_profile"))
+    return render_template("profile_pic_upload.html")
+    
+@app.route("/delete_profile_pic",methods=["GET","POST"])
+@login_required
+def delete_profile_pic():
+     if request.method == "GET":
+         
+         cloudinary.uploader.destroy("YP-CONNECT_PROFILE_PICTURES/{current_user.profile_pic_public_id}", invalidate=True)
+         
+         user_collection.update_one({
+         "_id":ObjectId(current_user.id)},
+         {"$set":
+             {"profile_pic_url":"None",
+             "profile_pic_public_id":"None"}
+         })
+     return redirect(url_for("view_profile"))
+
         
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
