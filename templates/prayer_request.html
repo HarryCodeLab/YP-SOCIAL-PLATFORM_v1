@@ -61,12 +61,23 @@ body {margin:0;}
 <div style="border:1px solid #ccc;padding:10px;margin:10px 0;border-radius:8px;">
 <nav>
     <a style="background-color: transparent; text-decoration: none;"
-      <class="a" href= "{{url_for('view_auth_profile',auth_id=prayer_request.Author_id)}}">
-    {% if prayer_request.is_admin.role == "Admin" %}
-        <img src="{{ url_for('static', filename='admin_pp.png') }}" alt="🗑" style="float:left;width:42px;height:42px;">
+    <class="a" href= "{{url_for('view_auth_profile',auth_id=prayer_request.Author_id)}}">
+    
+    {% if prayer_request.is_admin.profile_pic_url == "None" %}
+    
+        {% if prayer_request.is_admin.role == "Admin" %}
+            <img src="{{ url_for('static', filename='admin_pp.png') }}" alt="🗑" style="float:left;width:42px;height:42px;">
+            
+        {% else %}
+            <img src="{{ url_for('static', filename='default_pp.png') }}" alt="🗑" style="float:left;width:42px;height:42px;">
+            
+        {% endif %}
+        
     {% else %}
-        <img src="{{ url_for('static', filename='default_pp.png') }}" alt="🗑" style="float:left;width:42px;height:42px;">
+        <img src="{{prayer_request.is_admin.profile_pic_url}}" alt="🗑" style="float:left;width:42px;height:42px;border-radius:50%;">
+        
     {% endif %}
+    
     <h1>{{ prayer_request.Author }}</h1></a>
 </nav>
 <style>
@@ -85,7 +96,7 @@ body {margin:0;}
     {% endif %} 
     
     <form action="{{url_for('prayed_for',request_id=prayer_request._id)}}" method="POST">
-    <button class="button" type="submit">Prayed for</button>
+    <button class="button" style= "border-radius:55%"type="submit">Prayed for</button>
     {% if prayer_request.prayed_for == 1 %}
         {{prayer_request.prayed_for}} person prayed for this request
     {% elif prayer_request.prayed_for == 0 %}
