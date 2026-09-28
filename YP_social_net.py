@@ -29,6 +29,8 @@ import uuid
 import os
 from bson import ObjectId
 from dotenv import load_dotenv
+import cloudinary
+import cloudinary.uploader
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 env_path = os.path.join(BASE_DIR, ".env")
