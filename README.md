@@ -2,19 +2,19 @@
 
 YP Social Platform or simply YP CONNECT is a social platform created to help Young Presbyterians (YPs) connect, communicate, encourage one another, and grow together in their faith.
 
-The idea behind YP Connect came from a simple observation: young people spend a lot of time online, but much of that time can disappear into endless scrolling without creating meaningful connections. I wanted to create a place where YPs could open an app on a boring weekend and actually find something useful, encouraging, and enjoyable to do.
+The idea behind YP Connect came from a simple observation: young people spend a lot of time online, but much of that time can disappear into endless scrolling without creating meaningful connection[...]
 
-The platform is designed around the Young Presbyterian community. Members can interact through posts and comments, watch videos, participate in goals and challenges, track their progress, and eventually have more opportunities to communicate and support one another across congregations.
+The platform is designed around the Young Presbyterian community. Members can interact through posts and comments, watch videos, participate in goals and challenges, track their progress, and event[...]
 
 ---
 
 ## 💡 The Problem
 
-Young Presbyterian groups have communities full of ideas, conversations, activities, Bible studies, challenges, and people who want to encourage each other. However, these interactions can become scattered across different platforms and messaging groups.
+Young Presbyterian groups have communities full of ideas, conversations, activities, Bible studies, challenges, and people who want to encourage each other. However, these interactions can become [...]
 
 Important announcements can get buried. Discussions can disappear into chat histories. Members from different congregations may have very few opportunities to interact with each other online.
 
-At the same time, young people already spend a significant amount of time on social media. Instead of creating another platform designed purely around entertainment, I wanted to create a platform where social interaction could also encourage faith, learning, participation, and community.
+At the same time, young people already spend a significant amount of time on social media. Instead of creating another platform designed purely around entertainment, I wanted to create a platform [...]
 
 This led to the idea of YP Connect.
 
@@ -28,7 +28,7 @@ Users can create posts and interact with other members through comments. The pla
 
 Video content can be shared with the community, with comments allowing users to discuss the content rather than simply watching it.
 
-The long-term vision is to make YP Connect a place where YP members from different congregations can meet, participate in Bible challenges, prepare for rallies, share ideas, encourage one another, and make prayer requests.
+The long-term vision is to make YP Connect a place where YP members from different congregations can meet, participate in Bible challenges, prepare for rallies, share ideas, encourage one another,[...]
 
 The goal is not to simply build another social media platform. The goal is to build a community.
 
@@ -51,9 +51,23 @@ YP Connect is primarily built with Python and Flask on the backend, with HTML, C
 - JavaScript
 
 ### Other Services
-- Cloudinary for planned image storage and media management
+- Cloudinary for image storage and media management
 - Internet Archive for video storage
 - Render for web deployment
+
+---
+
+## 👥 The Team
+
+YP Connect is being developed by a collaborative team of young developers:
+
+### Harry Code Lab
+**Full Stack Developer** – Backend architecture, database design, Flask development, deployment, and project leadership. Started learning to code in October 2024 on paper and has since built YP Connect from an Android phone using Pydroid 3 and Termux.
+
+### Mercy-Ruth
+**Frontend & JavaScript Specialist** – Master JavaScript programmer handling frontend development, UI/UX implementation, and real-time client-side features. Recently joined the YP Connect journey and is bringing fresh ideas and technical expertise to the platform.
+
+Together, we're building technology that brings people together.
 
 ---
 
@@ -61,9 +75,9 @@ YP Connect is primarily built with Python and Flask on the backend, with HTML, C
 
 One of the most unusual parts of this project is that much of the development was done directly from an Android phone.
 
-I use **Pydroid 3** as my Python development environment. Pydroid 3 allows Python programs to be written and executed on Android, making it possible for me to develop the Flask application without needing a real computer.
+I use **Pydroid 3** as my Python development environment. Pydroid 3 allows Python programs to be written and executed on Android, making it possible for me to develop the Flask application without[...]
 
-I also use **Termux**, an Android terminal environment that provides a Linux-like command-line environment. During development, I used Termux to experiment with MongoDB and run a local MongoDB server while learning how databases and applications communicate.
+I also use **Termux**, an Android terminal environment that provides a Linux-like command-line environment. During development, I used Termux to experiment with MongoDB and run a local MongoDB ser[...]
 
 This setup was not always easy, but it allowed me to learn and build using the hardware I had available.
 
@@ -73,15 +87,15 @@ This setup was not always easy, but it allowed me to learn and build using the h
 
 Building YP Connect has involved many challenges.
 
-One of the first major challenges was learning how different parts of a web application communicate with each other. I had to learn HTML and JavaScript while simultaneously building the Flask backend. At first, even simple things such as displaying comments or connecting a form to a Flask route could be confusing.
+One of the first major challenges was learning how different parts of a web application communicate with each other. I had to learn HTML and JavaScript while simultaneously building the Flask back[...]
 
-Database connectivity was another major challenge. I experimented with MongoDB, PyMongo, Flask-PyMongo, MongoDB Atlas, and a local MongoDB server hosted through Termux. There were connection problems, DNS issues, and configuration errors that required a lot of debugging.
+Database connectivity was another major challenge. I experimented with MongoDB, PyMongo, Flask-PyMongo, MongoDB Atlas, and a local MongoDB server hosted through Termux. There were connection probl[...]
 
-Another major problem involved posts and synchronization. Initially, users sometimes had to synchronize before seeing new posts, and synchronization could cause posts to appear more than once. Learning Socket.IO helped solve this problem by allowing the application to communicate with users in real time. After implementing Socket.IO, posts and comments became much more stable.
+Another major problem involved posts and synchronization. Initially, users sometimes had to synchronize before seeing new posts, and synchronization could cause posts to appear more than once. Lea[...]
 
-Deployment introduced another set of challenges. The application worked locally, but getting it running on the web required understanding environment variables, production configuration, database connections, and server behavior. I also had to learn that development settings such as Flask's debug mode should not simply be carried into production.
+Deployment introduced another set of challenges. The application worked locally, but getting it running on the web required understanding environment variables, production configuration, database [...]
 
-Profile pictures presented another challenge. I initially experimented with storing image URLs and local static files before deciding that a cloud-based solution such as Cloudinary would be more appropriate once the platform has more real users.
+Profile pictures presented another challenge. I initially experimented with storing image URLs and local static files. We're now implementing a cloud-based solution with **Cloudinary** for reliable and scalable image management[...]
 
 ---
 
@@ -99,7 +113,12 @@ In production, environment variables are configured through the hosting platform
 
 YP Connect is currently deployed on the web and is being tested by real users.
 
-The project has reached its first **5 users**, which is an important milestone because the platform is no longer being tested only by its developer.
+The project has reached its first **8 users**, and we're actively working on improving engagement and user experience.
+
+Recent developments include:
+- Real profile pictures implementation with Cloudinary integration
+- Enhanced frontend features from our JavaScript specialist
+- Ongoing bug fixes and platform improvements
 
 The current focus is on improving the user interface, fixing bugs discovered through real-world use, collecting feedback, and preparing the platform for wider testing.
 
@@ -111,7 +130,7 @@ Future development may include:
 
 - More community interaction features
 - Better profile customization
-- Cloud-based profile pictures
+- Scheduled content and automated challenges
 - More Bible challenges
 - Prayer request features
 - Rally study resources
@@ -125,13 +144,13 @@ The long-term goal is to make YP Connect useful beyond a single congregation and
 
 ---
 
-## ❤️ Why I Built It
+## ❤️ Why We Built It
 
-YP Connect started as a project, but I don't want it to remain just another teenager's coding project sitting on GitHub.
+YP Connect started as a project, but we don't want it to remain just another teenager's coding project sitting on GitHub.
 
-I want it to become something people actually use.
+We want it to become something people actually use.
 
-I want a YP member to be able to open YP Connect on a boring weekend, find a Bible challenge, see what other members are talking about, watch something interesting, complete a goal, encourage someone, or simply feel connected to the wider YP community.
+We want a YP member to be able to open YP Connect on a boring weekend, find a Bible challenge, see what other members are talking about, watch something interesting, complete a goal, encourage som[...]
 
 The goal is simple:
 
@@ -139,11 +158,11 @@ The goal is simple:
 
 ---
 
-## 👨‍💻 About the Developer
+## 👨‍💻 About the Developers
 
-YP Connect is being developed by a young developer from Cameroon who is learning software development by building real projects.
+YP Connect is being developed by young developers from Cameroon who are learning software development by building real projects.
 
-Rather than following only tutorials, this project has been an opportunity to learn Python, Flask, databases, JavaScript, Socket.IO, deployment, APIs, cloud services, and application design through solving real problems.
+Rather than following only tutorials, this project has been an opportunity to learn Python, Flask, databases, JavaScript, Socket.IO, deployment, APIs, cloud services, and application design throu[...]
 
 The project is still growing, and feedback from users is an important part of deciding what comes next.
 
@@ -152,8 +171,9 @@ The project is still growing, and feedback from users is an important part of de
 ## 📜 Project Status
 
 YP Connect is currently live on the web at "https://yp-connect.onrender.com" and undergoing testing with its first users.
+
 Every bug, suggestion, and piece of feedback helps shape the next version.
 
 Thanks for reading.            
            
-Harry Code Lab /<build with purpose/>
+**Harry Code Lab** & **Mercy-Ruth** / *Build with Purpose* </build with purpose/>
