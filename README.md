@@ -62,7 +62,7 @@ YP Connect is primarily built with Python and Flask on the backend, with HTML, C
 YP Connect is being developed by a collaborative team of young developers:
 
 ### Harry Code Lab
-**Full Stack Developer** – Backend architecture, database design, Flask development, deployment, and project leadership. Started learning to code in October 2024 on paper and has since built YP Connect from an Android phone using Pydroid 3 and Termux.
+**Full Stack Developer** – Backend architecture, database design, Flask development, deployment, and project leadership. Started learning to code in October 2025 on paper and has since built YP Connect from an Android phone using Pydroid 3 and Termux.
 
 ### Mercy-Ruth
 **Frontend & JavaScript Specialist** – Master JavaScript programmer handling frontend development, UI/UX implementation, and real-time client-side features. Recently joined the YP Connect journey and is bringing fresh ideas and technical expertise to the platform.
