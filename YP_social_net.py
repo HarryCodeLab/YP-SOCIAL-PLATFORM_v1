@@ -779,39 +779,44 @@ def delete_video(video_id,author_id):
             
     return redirect(url_for("view_videos"))
 
-@app.route("/upload_profile_pic",methods=["GET","POST"])           
+@app.route("/upload_profile_pic")
+@login_required
+def render_profile_pic_template():
+    return render_template("profile_pic_upload.html")
+
+@app.route("/upload_profile_pic_to_cloudinary",methods=["GET","POST"])           
 @login_required
 def upload_profile_pic():
-    if request.method == "POST": 
-        profile_pic = request.files["profile_pic"]
-        os.makedirs("User_uploads",exist_ok=True)
-        filename=secure_filename(profile_pic.filename)
-        temporary_path=os.path.join("User_uploads",filename)
+    profile_pic = request.files["profile_pic"]
+    os.makedirs("User_uploads",exist_ok=True)
+    filename=secure_filename(profile_pic.filename)
+    temporary_path=os.path.join("User_uploads",filename)
         
-        unique_identifier = uuid.uuid4().hex
-        try:
-                upload_result = cloudinary.uploader.upload(
-                temporary_path,
-                folder = "YP-CONNECT_PROFILE_PICTURES",
-                public_id = unique_identifier
-                )
-                os.remove(temporary_path)
-        except Exception as E:
-                return render_template_string("""<h1>Sorry, an exception occurred.Your Profile Picture could not be uploaded, check your internet connection and try again</h1><form action = "/View_your_profile">
+    unique_identifier = uuid.uuid4().hex
+    try:
+        profile_pic.save(temporary_path)
+        upload_result = cloudinary.uploader.upload(
+        temporary_path,
+        folder = "YP-CONNECT_PROFILE_PICTURES",
+        public_id = unique_identifier
+            )
+    except Exception as E:
+        os.remove(temporary_path)
+        return render_template_string("""<h1>Sorry, an exception occurred.Your Profile Picture could not be uploaded, check your internet connection and try again</h1><form action = "/View_your_profile">
     <button type="submit" class="btn-profile">Back</button>
 </form>""")
 
-        user_collection.update_one({
-        "_id":ObjectId(current_user.id)},
-        {"$set":
-                {
-                "profile_pic_url":upload_result.get("secure_url"),
-                "profile_pic_public_id":unique_identifier
-                }
+    user_collection.update_one({
+    "_id":ObjectId(current_user.id)},
+    {"$set":
+            {
+            "profile_pic_url":upload_result.get("secure_url"),
+            "profile_pic_public_id":unique_identifier
+            }
         }
-        )
-        return redirect(url_for("view_profile"))
-    return render_template("profile_pic_upload.html")
+    )
+    os.remove(temporary_path)
+    return redirect(url_for("view_profile"))
     
 @app.route("/delete_profile_pic",methods=["GET","POST"])
 @login_required
