@@ -1,0 +1,112 @@
+<body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YP Social Platform - Upload My Profile Picture</title>
+<!--NAVIGATION CODE STARTS HERE -->
+</head>
+<style>
+ul {list-style-type: none; margin: 0; padding: 0; background-color: #333;top: 0;width: 100%;position: fixed;overflow-x: auto;white-space: nowrap;-webkit-overflow-scrolling: touch; }
+ul::-webkit-scrollbar {display: none;}
+ul {scrollbar-width: none;}
+li {display: inline-block;border-right: 1px solid #bbb;}
+li:last-child {border-right: none;}
+li a {display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;font-size: 20px;}
+li a:hover:not(.active) {background-color: blue;}
+.active {
+  background: #11998e;}
+body {margin:0; background-color:#f1f7f9;}
+</style>
+body {margin:0;}
+<!-- Had to spend weekends and nights learning html and css. -->
+<ul>
+    <li><a class="active" href="/">Home🏘</a></li>
+    <li><a href="/View_your_profile">Profile👤</a></li>
+    <li><a href="/chats">Chat🖐</a></li>
+    <li><a href="/goals">Goals🏃</a></li>
+    <li><a href="/prayer_request">Prayer_requests🙏</a></li>
+    <li><a href="/bible_challenge">Bible_challenges📖</a></li>
+    <li><a href= "/about_yp">About YP🌟</a></li>
+    <li><a href="/progress_dashboard">Progress Dashboard📉</a></li>
+    <li><a href= "/view_videos">Daily Lessons📚</a></li>
+    <li><a href= "/help">Help ❓</a></li> 
+</ul>
+<!--NAVIGATION CODE ENDS HERE -->
+
+<style>
+/* CSS Styling */
+.upload-container {
+  font-family: serif;
+  display: flex;
+  font-size: 13px;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 90%;
+}
+
+preview-box {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  overflow: hidden;
+}
+
+input, button { display: block; width: 100%; margin: 10px 0; padding: 10px; box-sizing: border-box; padding: 12px; font-size: 22px; font-weight: bold;}
+
+button { background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+
+.hidden {
+  display: none;
+}
+</style>
+
+<hr>
+<hr>
+
+<div class="upload-container">
+  <hr>
+  
+<form action ="/upload_profile_pic_to_cloudinary" method ="POST" enctype="multipart/form-data">  
+
+  <input type="file" id="file-chooser" name="profile_pic" accept="image/*">
+  
+  <div class="preview-box">
+  
+    <img id="image-preview" src="" alt="Image Preview" style="border-radius:50%; width:90%;" class="hidden">
+    <span style= "color:red; font-family:monospace; font-size: 22px; font-weight:bold;" id="placeholder-text">No image selected yet</span>
+    <br>
+    <button type="submit" class="btn-upload">UPLOAD PROFILE PIC</button>
+    
+</form>
+    
+  </div>
+</div>
+
+<script>
+const fileChooser = document.getElementById('file-chooser');
+const imagePreview = document.getElementById('image-preview');
+const placeholderText = document.getElementById('placeholder-text');
+
+fileChooser.addEventListener('change', function() {
+  const file = this.files[0]; // Damn bro! JavaScript is so damn hard. But atleast I'm nailing it. whoo-hoo
+
+  if (file) {
+
+    const objectURL = URL.createObjectURL(file);
+    
+    imagePreview.src = objectURL;
+    
+    imagePreview.classList.remove('hidden');
+    placeholderText.classList.add('hidden');
+  } else { //I never knew if-else in JS could be this confusing. I'm used to Python
+  
+    imagePreview.src = "";
+    imagePreview.classList.add('hidden');
+    placeholderText.classList.remove('hidden');
+  }
+});
+</script>
+
+<body>
