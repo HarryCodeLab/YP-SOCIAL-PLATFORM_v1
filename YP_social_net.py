@@ -3,15 +3,15 @@ __Author__ = '''Harry <lokimaharry8@gmail.com> <harrycodelab@gmail.com>'''
 __Copyright__ = '''Copyright (c) <2026> <Harry Code Lab>. All rights reserved'''
 __License__ = """The MIT License"""
 __PROJECT_SUMMARY__='''
-THIS PROJECT WAS BUILT SPECIALLY FOR YPs(Young Presbyterians) in the PCC(Presbyterian Church in Cameroon)
 
-A social media platform built for YP members from all over the PCC to meet, learn more about God, share their faith with each other, study the Bible with each other, pray for each other and learn from YP/Sunday School teachers from videos, rather than scrolling endlessly on Internet sites (turning doom scrolling into Faith-Scrolling ).
-Special Thanks to all my friends who helped me make this Project successful.
+A social media platform built for Young People to meet online, learn more about God, share their faith with each other, study the Bible with each other, pray for each other and learn many important Faith and Life Teachings from video contents, rather than scrolling endlessly on Internet sites (turning doom scrolling into Faith-Scrolling ).
+Special Thanks to all my friends who helped make this Project a Success.
+
+This version was specially built for the Young Presbyterian community of the Presbyterian Church in Cameroon, as it is undergoing testing in real world scenarios.
 In the future this project would be progressively updated.
+
 Everything with CHRIST, Keep close to CHRIST.'''
 
-import eventlet
-eventlet.monkey_patch()
 from flask import Flask, render_template, request, redirect, url_for, session, flash, render_template_string
 from pymongo.server_api import ServerApi
 import pymongo
@@ -32,10 +32,7 @@ from dotenv import load_dotenv
 import cloudinary
 import cloudinary.uploader
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-env_path = os.path.join(BASE_DIR, ".env")
 load_dotenv()
-
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("APP_SECRET_KEY")
@@ -83,8 +80,8 @@ class User(UserMixin):
         self.phone_number = user_data['phone_number']
         self.role = user_data["role"]
         self.profile_pic_url = user_data["profile_pic_url"]
-        self.profile_pic_public_id = user_data["profile_pic_public_id"]
         self.about_me = user_data["about_me"]
+        self.profile_pic_public_id = user_data["profile_pic_public_id"]
 
     @staticmethod
     def get(user_id):
@@ -137,7 +134,7 @@ def search():
     
 @app.route('/View_your_profile')
 @login_required
-def view_my_profile():
+def view_my_profile():    
     return redirect(url_for("view_profile"))        
 
 @app.route("/login",methods=["GET", "POST"])
@@ -161,8 +158,8 @@ def login():
             "phone_number": number,
             "congregation": congregation.upper(),
             "profile_pic_url" : "None",
-            "profile_pic_public_id" : "None",
-            "about_me" : about_me.capitalize()
+            "about_me" : about_me,
+            "profile_pic_public_id" : "None"
         }
         
         # Insert into MongoDB
@@ -222,7 +219,7 @@ def edit_profile():
                 "username": username.title(),
                 "email": email.lower(),
                 "congregation": congregation.upper(),
-                "about_me": about_me.capitalize(),
+                "about_me": about_me,
                 "phone_number": phone_number,
             }}
         )
@@ -259,7 +256,7 @@ def edit_profile():
         return redirect(url_for("view_profile"))
     
     return render_template("edit_profile.html")
-
+           
 @app.route("/submit", methods=["GET", "POST"])        
 @login_required
 def view_profile():
@@ -287,11 +284,11 @@ def write_message():
         "user_id": ObjectId(current_user.id),
         "post_id": post["_id"]
     }
-    
+   
         post["already_liked"]= likes.find_one(like_filter) 
         post["like_count"] = likes.count_documents({"post_id": post["_id"]})
         post["same_author"] = ObjectId(current_user.id) == ObjectId(post["Author_id"])
-        post["is_admin"] = user_collection.find_one({"_id":post["Author_id"]})
+        post["is_admin"] = user_collection.find_one({"_id":ObjectId(post["Author_id"])})
         
     return render_template("chat.html", posts=posts ,post_count=post_count)
 
@@ -685,13 +682,14 @@ def upload_video():
         "author_id":ObjectId(current_user.id),
         "author":current_user.username,
         "title":request.form["title"].title(),
-        "caption":request.form["caption"].capitalize(),
+        "caption":request.form["caption"],
         "date":datetime.datetime.now().strftime("%d %b %Y at %I:%M %p"),
         })
         
     return redirect(url_for("home"))
         
 @app.route("/view_videos",methods=["POST","GET"])
+@login_required
 def view_videos():
    if not current_user.is_authenticated:
         return redirect(url_for("login"))
@@ -780,23 +778,7 @@ def delete_video(video_id,author_id):
             return redirect(url_for("view_videos"))
             
     return redirect(url_for("view_videos"))
-    
-@app.route("/sign_out_user",methods=["GET","POST"])    
-@login_required
-def sign_out():
-    if request.method == "GET":
-        user_collection.delete_one({"_id":ObjectId(current_user.id)})
-        completed_goals.delete_one({"user_id":ObjectId(current_user.id)})
-        logout_user()
-        
-    return redirect(url_for("login"))
-    
-@app.route("/help")
-@login_required
-def help():
-    if not current_user.is_authenticated:
-        return redirect(url_for("login"))    
-    return render_template("help.html")
+
 @app.route("/upload_profile_pic",methods=["GET","POST"])           
 @login_required
 def upload_profile_pic():
@@ -809,7 +791,7 @@ def upload_profile_pic():
         unique_identifier = uuid.uuid4().hex
         try:
                 upload_result = cloudinary.uploader.upload(
-                "User_uploads/{filename}",
+                temporary_path,
                 folder = "YP-CONNECT_PROFILE_PICTURES",
                 public_id = unique_identifier
                 )
@@ -836,7 +818,8 @@ def upload_profile_pic():
 def delete_profile_pic():
      if request.method == "GET":
          
-         cloudinary.uploader.destroy("YP-CONNECT_PROFILE_PICTURES/{current_user.profile_pic_public_id}", invalidate=True)
+         destroy_path = f"YP-CONNECT_PROFILE_PICTURES/{current_user.profile_pic_public_id}"
+         cloudinary.uploader.destroy(destroy_path, invalidate=True)
          
          user_collection.update_one({
          "_id":ObjectId(current_user.id)},
@@ -846,17 +829,40 @@ def delete_profile_pic():
          })
      return redirect(url_for("view_profile"))
 
+@app.route("/sign_out_user",methods=["GET","POST"])    
+@login_required
+def sign_out():
+    if request.method == "GET":
+        user_collection.delete_one({"_id":ObjectId(current_user.id)})
+        completed_goals.delete_one({"user_id":ObjectId(current_user.id)})
+        logout_user()
+        
+    return redirect(url_for("login"))
+    
+@app.route("/help")
+@login_required
+def help():
+    if not current_user.is_authenticated:
+        return redirect(url_for("login"))    
+    return render_template("help.html")
         
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     socketio.run(app, debug=False, host="0.0.0.0", port=port)
     
 #_______________________________FINISHING PRAYER_______________________________________
-'''LORD, THANK YOU FOR HELPING ME BUILD THIS PROJECT FOR YP MEMBERS LIKE ME TO COME CLOSER TO YOU AND STUDY WITH EACH OTHER.
-FATHER LORD, I PRAY THAT YOU HELP THIS PROJECT TO BECOME A DAILY TOOL FOR YP MEMBERS TO SPEND THEIR TIME THE RIGHT WAY, DOING THE RIGHT THINGS.
-I ALSO PRAY FOR ALL MY FRIENDS WHO HELPED ME AND MOTIVATED ME WITH THIS PROJECT THAT YOU'LL ALWAYS BLESS THEM AND BE WITH THEM.
-GOD, YOU KNOW MY BIGGEST BATTLES. YOU KNOW THE WAR GOING ON IN MY MIND AND HEART RIGHT NOW, YOU KNOW HOW MY DAD'S GIVING ME A HARD TIME WITH MY CAREER OPTION AND MY PROJECTS PLUS ALL THIS DOCTORING STUFF. I'VE CHOSEN MY PATH AND THAT'S ENGINEERING BUT HE JUST CAN'T SEEM TO ACCEPT IT. 
-AND I WISH I COULD BOUNCE BACK IN SCHOOL AS THE TOP-DAWG AGAIN. I'VE BEEN HAVING SAD FEELINGS IN MY HEART AND NOT KNOWING HOW TO FEEL.
-FATHER I PRAY THAT YOU GRANT ME INNER PEACE DURING THIS MOMENTS OF SADNESS.
+'''LORD, THANK YOU FOR HELPING ME BUILD THIS PROJECT FOR YP MEMBERS LIKE ME TO COME CLOSER TO YOU AND INTERACT WITH EACH OTHER THROUGH MEANINGFUL CONTENT.
+
+FATHER LORD, I PRAY THAT YOU HELP THIS PROJECT TO BECOME A BLESSING  FOR YP MEMBERS TO SPEND THEIR TIME THE RIGHT WAY, DOING THE RIGHT THINGS, RATHER THAN ENDLESS AND USELESS SCROLLING ON INTERNET SITES.
+
+TO ALL MY FRIENDS  AND AS WELL MY PAIR DEVELOPER WHO HELPED ME AND MOTIVATED ME WITH THIS PROJECT, I PRAY THAT YOU'LL ALWAYS BLESS THEM AND BE WITH THEM.
+
+LORD YOU KNOW THIS YEAR'S BIGGEST CHALLENGE, SCHOOL JUST STARTED AND I HAVE A LOT OF GOALS, I KNOW I NEED TO WORK HARD BUT LORD PLEASE ALWAYS GIVE ME A REASON TO KEEP PUSHING AND NEVER STOP.
+
+I'VE BEEN HAVING EMPTY FEELINGS IN MY HEART AND NOT KNOWING HOW TO FEEL.
+FATHER I PRAY THAT YOU GRANT ME INNER PEACE AMD HELP ME GET MY LIFE BACK ON TRACK.
+
 AND ALSO, GOD PLEASE HELP ME WITH BETTER TOOLS SO AS TO IMPROVE MY SKILLS
 WE ASK ALL THIS THROUGH JESUS CHRIST YOUR SON OUR LORD; AMEN'''    
+
+# FRI-02-OCT-2026
