@@ -76,7 +76,7 @@ login_manager.login_view = 'login'
 
 class User(UserMixin):
     def __init__(self, user_data):
-        self.id = str(user_data['_id']) 
+        self.id = str(user_data['user_id']) 
         self.username = user_data["username"]
         self.email = user_data['email']
         self.congregation = user_data['congregation']
@@ -167,6 +167,7 @@ def login():
         
         # Insert into MongoDB
         result = user_collection.insert_one(save_user_dict)
+        user_collection.update_one({"_id":result.inserted_id},{"$set":{"user_id":result.inserted_id}})
         
         save_user_dict['_id'] = result.inserted_id
         
@@ -773,7 +774,7 @@ def delete_video(video_id,author_id):
     if request.method == "GET":
                     
         if ObjectId(current_user.id) == ObjectId(author_id):
-            post_collection.delete_many({"_id":ObjectId(video_id)})
+            video_collection.delete_many({"_id":ObjectId(video_id)})
             comment_collection.delete_many({"post_id":ObjectId(video_id)})
             likes.delete_many({"video_id":ObjectId(video_id)})
             
@@ -841,6 +842,8 @@ def delete_profile_pic():
 @login_required
 def sign_out():
     if request.method == "GET":
+        destroy_path = f"YP-CONNECT_PROFILE_PICTURES/{current_user.profile_pic_public_id}"
+        cloudinary.uploader.destroy(destroy_path, invalidate=True)
         user_collection.delete_one({"_id":ObjectId(current_user.id)})
         completed_goals.delete_one({"user_id":ObjectId(current_user.id)})
         logout_user()
