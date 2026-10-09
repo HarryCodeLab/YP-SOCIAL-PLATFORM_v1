@@ -4,6 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>YP Social Platform - Home</title>
 <!--NAVIGATION CODE STARTS HERE -->
+</head>
 <style>
 ul {list-style-type: none; margin: 0; padding: 0; background-color: #333;top: 0;width: 100%;position: fixed;overflow-x: auto;white-space: nowrap;-webkit-overflow-scrolling: touch; }
 ul::-webkit-scrollbar {display: none;}
@@ -33,14 +34,16 @@ body {margin:0;}
 <!--NAVIGATION CODE ENDS HERE -->
 
 <h1><hr></h1>
-<img src="{{ url_for('static', filename='yp_social_platform_logo.png')}}" alt="YP SOCIAL PLATFORM LOGO" style="float:center;width:90px;height:90px;">
+<img src="{{ url_for('static', filename='yp_social_platform_logo.png')}}" alt="YP SOCIAL PLATFORM LOGO" style="float:center;width:120px;height:120px;border-radius:50%;">
 <h2>Welcome back, {{current_user.username}}! </h2>
 <h3>Remember Goal #1:</h3>
 <h2>Pray for 5 brothers or sisters today.</h2>
 and don't forget to walk with God, always
 <h5>{{"_"*35}}</h5>
 <h4>Today's verse:</h4>
+<div style="margin-top: 20px; padding: 15px; background-color: powderblue; border-left: 5px solid #385723; color: #385723; font-weight: bold;">
 {{verse}}<br>
+</div>
 <h1></h1>
 
 <h1></h1><br>
