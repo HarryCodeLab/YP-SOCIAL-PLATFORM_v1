@@ -169,7 +169,7 @@ def login():
         result = user_collection.insert_one(save_user_dict)
         user_collection.update_one({"_id":result.inserted_id},{"$set":{"user_id":result.inserted_id}})
         
-        save_user_dict['_id'] = result.inserted_id
+        save_user_dict['user_id'] = result.inserted_id
         
         user_obj = User(save_user_dict)
        
